@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create your deck</title>
+</head>
+<body>
+     
+    {% if success is defined %}
+        {% if success == True %}
+            <p>bravo you created your new deck</p>
+        {% else %}
+            <p>Something went wrong</p>
+        {% endif %}
+    {% else %}
+        {% include "forms/deck_form.html" %}
+    {% endif %}
+
+</body>
+</html>
