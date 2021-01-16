@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Error
-import app_config
+from app import app_config
 
 
 def connect():

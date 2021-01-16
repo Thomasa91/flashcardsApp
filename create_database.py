@@ -99,11 +99,8 @@ def put_decks_into_table(conn, decks):
     query = "INSERT INTO deck (name) VALUES"
 
     for card_index in range(0, len(decks)):
+        
         value = f"('{decks[card_index]}');"
-        # if card_index == len(decks) - 1:
-        #     value = ''.join([value, ';'])
-        # else:
-        #     value = ''.join([value, ','])
 
         c.execute(' '.join([query, value]))
 
@@ -125,11 +122,6 @@ def put_cards_into_table(conn, number_of_decks):
         deck_index = random.randint(1, number_of_decks)
         values = f"('{word}', {deck_index}, '{translation}');"
 
-            # if card_index == len(cards) -1:
-            #     values = ''.join([values, ';'])
-            # else:
-            #     values = ''.join([values, ','])  
-
         c.execute(' '.join([query, values]))
 
     conn.commit()
@@ -138,7 +130,7 @@ def put_cards_into_table(conn, number_of_decks):
 
 
 if __name__ == "__main__":
-    conn = create_connection(r"database.db")
+    conn = create_connection(r"app/database.db")
 
     create_table(conn, CREATE_DECK_TABLE_SQL)
     create_table(conn, CREATE_CARD_TABLE_SQL)

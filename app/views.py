@@ -1,8 +1,6 @@
-from flask import Flask, render_template
-import database_context
-
-app = Flask(__name__)
-
+from flask import render_template
+from app import app
+from app import database_context
 
 @app.route("/")
 def home():
@@ -12,8 +10,6 @@ def home():
 @app.route("/decks")
 def display_decks():
     conn = database_context.connect()
-
-    # GET ALL DECKS
 
     cursor = conn.cursor()
 
@@ -39,7 +35,3 @@ def display_cards(id):
     cards = cursor.fetchall()
 
     return render_template("show_cards.html", cards = cards)
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
