@@ -6,9 +6,12 @@
     <title>Document</title>
 </head>
 <body>
+    <h2>Add a new card</h2>
+    <a id="card" href="">Add  new card</a>
     {% for card in cards %}
         <p>{{ card[2] }}</p>
         <p>{{ card[3] }}</p>
     {% endfor %}
 </body>
+<script src="../static/js/card_script.js"></script>
 </html>
