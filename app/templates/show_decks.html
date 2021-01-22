@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decks</title>
-</head>
-<body>
+{% extends "index.html" %}
+
+{% block body %}
+    
     {% for deck in decks %}
-        <p>{{ deck[0] }}  {{ deck[1] }}</p><a href="/{{ deck[0] }}/cards">View cards</a>
+        <p>{{ deck[0] }}  {{ deck[1] }}</p><a href="/deck/{{ deck[0] }}">View cards</a>
     {% endfor %}
-</body>
-</html>
+
+{% endblock body %}
