@@ -1,11 +1,27 @@
 from flask import render_template, request
+from flask.globals import session
 from app import app
 from app import database_context
 
 @app.route("/")
 def home():
+    if "user" in session:
+        user = session["user"]
+        return render_template("index.html", user = user)
+
     return render_template("index.html")
 
+@app.route("/show_users")
+def users():
+    conn = database_context.connect()
+
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM user")
+
+    users = c.fetchall()
+
+    return '<br>'.join(' '.join(str(value) for value in list(user)) for user in list(users))
 
 @app.route("/decks")
 def decks():
