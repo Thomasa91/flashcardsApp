@@ -1,3 +1,4 @@
+from app import app_config
 import sqlite3
 import random
 import string
@@ -177,7 +178,7 @@ def put_user_into_table(conn, users):
 
 
 if __name__ == "__main__":
-    conn = create_connection(r"app/database.db")
+    conn = create_connection(app_config.DATABASE_PATH)
 
     create_table(conn, CREATE_DECK_TABLE_SQL)
     create_table(conn, CREATE_CARD_TABLE_SQL)

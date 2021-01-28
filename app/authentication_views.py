@@ -1,52 +1,43 @@
 from flask import render_template, request, session, redirect
 from flask.helpers import url_for
-from app import app, database_context
+
+from app import app
+from app.data.models import User
+from app.data.repositories import UsersRepository
 
 
-
-@app.route("/register", methods=["POST" ,"GET"])
+@app.route("/register", methods=["POST", "GET"])
 def register():
 
-
     if "user" in session:
-        return redirect("home")
+        return redirect(url_for("home"))
 
     elif request.method == "POST":
 
         username = request.form['username']
-        password = request.form['password']
         email = request.form['email']
+        password = request.form['password']
         birthDay = request.form['birthDay'].split("-")[0]
 
 
-        conn = database_context.connect()
+        user = User(username, email, password, birthDay)
 
-        c = conn.cursor()
-
-        # check if user exists
-        query = "SELECT user_name FROM user WHERE user_name = '{username}' OR user_email = '{email}'"
-
-        c.execute(query)
-
-        user = c.fetchone()
-        
-        if user:
+        # TODO change responses later
+        if user.ifUserExists():
             return "User already exits"
-        else:
+        if not user.validatePassword():
+            return "at least 1 capital letter, 1 small letter, 1 number, length 8 - 20"
 
-            query = f"INSERT INTO user (user_name, user_email, user_password, date_of_birth) VALUES ('{username}', '{email}', '{password}', '{birthDay}');"
+        if not user.validateEmail():
+            return "email has wrong format"
 
-            c.execute(query)
+        if user.saveUserToDataBase():
+            return "success"
 
-            conn.commit()
-
-            if c.lastrowid:
-                return "Bravo"
-            else:
-                return "something went wrong"
+        return "Something went wrong"
 
     else:
-        return render_template("forms/register.html")
+        return render_template("forms/register")
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -59,22 +50,17 @@ def login():
         username = request.form['username']
         password = request.form['password'] 
 
-        conn = database_context.connect()
-
-        c = conn.cursor()
-
-        query = f"SELECT user_id, user_name FROM user WHERE user_name = '{username}' AND user_password = '{password}';"
-
-        c.execute(query)
-
-        user = c.fetchone()
+        user = UsersRepository.fetchUserByName(username)
 
         if user:
-            session["user"] = user[1]
 
-            return redirect(url_for("home"))
-        else:
-            return f"something went wrong {user}"
+            if user.password == password:
+
+                session["user"] = user
+
+                return redirect(url_for("home"))
+
+        return f"something went wrong"
 
     else:
      return render_template("forms/login.html")

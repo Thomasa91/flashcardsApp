@@ -1,2 +1,2 @@
-DATABASE_PATH = 'app/database.db'
+DATABASE_PATH = 'app/data/database.db'
 # TODO refactor it later
