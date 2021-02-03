@@ -115,9 +115,9 @@ def generate_users():
         user_name = generate_random_word()
         user_email = generate_random_word(  ) + "@gmail.com"
         user_password = generate_random_word()
-        year_of_birth = str(random.randint(1970, 2010))
+        birthday = str(random.randint(1970, 2010))
 
-        users.append([user_name, user_email, user_password, year_of_birth])
+        users.append([user_name, user_email, user_password, birthday])
     
     return users
 

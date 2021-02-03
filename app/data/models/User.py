@@ -1,32 +1,40 @@
 import re
+import json
 from app.data.repositories import UsersRepository
 
 
 class User:
     # TODO should i have validation methods here or to implement them in another way ?
     # TODO when i create a new user I don't have id, what to do with it
-    def __init__(self, username, email, password, birthDay):
-        self.id = None
+    # TODO crypt the password
+    def __init__(self, id, username, email, password, birthday):
+        self.id = id
         self.username = username
         self.email = email
         self.password = password
-        self.birthDay = birthDay
-    
-    
-    def __init__(self, *data):
-        self.id = data[0]
-        self.username = data[1]
-        self.email = data[2]
-        self.password = data[3]
-        self.birthDay = data[4]
+        self.birthday = birthday
 
+    
+    @classmethod
+    def new_user(cls, username, email, password, birthday):
+        return cls(None, username, email, password, birthday)
+
+
+    @classmethod
+    def user(cls, args):
+        return cls(*args)
+
+    # OF COURSE IT DOESN'T WORK....
     def validateEmail(self):
 
-        pattern = r".+@\w+.\w+"
+        pattern = r"\.+@\w+.\w+"
 
-        return re.match(pattern, self.email)
+        # return re.match(pattern, self.email)
+
+        return True
 
 
+    # VALIDATION DOESN'T WORK REFACOTR IT LATER
     def validatePassword(self):
 
         password = self.password
@@ -40,17 +48,18 @@ class User:
         # min 8 characters, max 20
         numberOfCharacters = r"\.{8, 20}"
 
-        return re.match(capitalLetter, password) and re.match(smallLetter, password) and re.match(oneNumber, password) and re.match(numberOfCharacters, password)
-    
+        # return re.match(capitalLetter, password) and re.match(smallLetter, password) and re.match(oneNumber, password) and re.match(numberOfCharacters, password)
+
+        return True
+
+    def getUserDetails(self):
+
+        return [self.id, self.username, self.email, self.password, self.birthday]
+
+
     def ifUserExists(self):
+        return UsersRepository.fetchUserByEmail(self.email)
 
-        if(UsersRepository.fetchUserByName(self.username)) or UsersRepository.fetchUserByEmail(self.email):
-            return True
-
-        return False
-
-    def saveUserToDataBase(self):
-        if self.ifUserExists():
-            return False
-
-        return UsersRepository.saveUser(self)
+# RETURN JSON
+    def to_json(self):
+        return json.dumps(self.__dict__)

@@ -2,7 +2,6 @@ from flask import render_template, request, session, redirect
 from flask.helpers import url_for
 
 from app import app
-from app.data.models import User
 from app.data.repositories import UsersRepository
 
 
@@ -17,12 +16,12 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        birthDay = request.form['birthDay'].split("-")[0]
+        birthday = request.form['birthDay'].split("-")[0]
 
 
-        user = User(username, email, password, birthDay)
+        user = UsersRepository.createUser(username, email, password, birthday)
 
-        # TODO change responses later
+        # TODO change responses later/save user by using UsersRepository
         if user.ifUserExists():
             return "User already exits"
         if not user.validatePassword():
@@ -31,13 +30,13 @@ def register():
         if not user.validateEmail():
             return "email has wrong format"
 
-        if user.saveUserToDataBase():
+        if UsersRepository.saveUser(user):
             return "success"
 
         return "Something went wrong"
 
     else:
-        return render_template("forms/register")
+        return render_template("forms/register.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -56,11 +55,11 @@ def login():
 
             if user.password == password:
 
-                session["user"] = user
+                session["user"] = user.to_json()
 
                 return redirect(url_for("home"))
 
-        return f"something went wrong"
+        return "something went wrong"
 
     else:
      return render_template("forms/login.html")

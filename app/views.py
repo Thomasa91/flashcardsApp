@@ -1,7 +1,16 @@
+from flask.helpers import url_for
+from werkzeug.utils import redirect
+from app.data.models.Deck import Deck
 from flask import render_template, request
 from flask.globals import session
 from app import app
-from app import database_context
+import json
+
+# import repositories
+from app.data.repositories import UsersRepository
+from app.data.repositories import DecksRepository
+from app.data.repositories import CardsRepository
+
 
 @app.route("/")
 def home():
@@ -11,109 +20,82 @@ def home():
 
     return render_template("index.html")
 
+
 @app.route("/show_users")
 def users():
-    conn = database_context.connect()
+    
+    users = UsersRepository.fetchUsers()
 
-    c = conn.cursor()
+    info = []
 
-    c.execute("SELECT * FROM user")
+    for user in users:
+        info.append(' '.join(str(info) for info in user.getUserDetails()))
 
-    users = c.fetchall()
+    return '<br>'.join(info)
 
-    return '<br>'.join(' '.join(str(value) for value in list(user)) for user in list(users))
 
 @app.route("/decks")
 def decks():
-    conn = database_context.connect()
 
-    cursor = conn.cursor()
+    decks = DecksRepository.fetch_decks()
 
-    query = "SELECT * FROM deck;"
+    return render_template("show_decks.html", decks = decks)
 
-    cursor.execute(query)
 
-    results = cursor.fetchall()
-
-    return render_template("show_decks.html", decks = results)
-# TODO deck/id/cards
 @app.route("/deck/<deck_id>")
 def display_cards(deck_id):
 
-    conn= database_context.connect()
+    deck = DecksRepository.fech_deck_by_id(deck_id)
 
-    cursor = conn.cursor()
+    return render_template("show_cards.html", deck = deck)
 
-    querry = f"SELECT * FROM card WHERE deck_id == {deck_id};"
-
-    cursor.execute(querry)
-
-    cards = cursor.fetchall()
-
-    return render_template("show_cards.html", cards = cards, deck_id = deck_id)
 
 @app.route("/deck/<deck_id>/card/<card_id>")
 def card_detail(deck_id, card_id):
     
-    conn = database_context.connect()
+    card = CardsRepository.returnCardById(card_id)
 
-    cursor = conn.cursor()
+    return render_template("card_detail.html", card = card)
 
-    querry = f"SELECT word, translation FROM card WHERE deck_id == {deck_id} AND card_id == {card_id};"
-
-    cursor.execute(querry)
-
-    card = cursor.fetchone()
-    
-    word = card[0]
-    translation = card[1]
-
-    return render_template("card_detail.html", word = word, translation = translation)
 
 @app.route("/create_deck", methods=["POST", "GET"])
 def create_deck():
 
-    
+    if not 'user' in session:
+        return redirect(url_for("login"))
+
     if request.method == "POST":
+
         name = request.form['name']
 
-        conn = database_context.connect()
+        user_id = json.loads(session['user'])['id']
 
-        sql_query = f"INSERT INTO deck (name) VALUES('{name}');"
+        deck = DecksRepository.createDeck(user_id, name)
 
-        cursor = conn.cursor()
-
-        cursor.execute(sql_query)
-
-        conn.commit()
-
-        if cursor.rowcount == 1:
+        if DecksRepository.saveToDataBase(deck):
             return render_template("create_deck.html", success=True)
         else:
             return render_template("create_deck.html", success=False)
+
     else:
         return render_template("create_deck.html")
 
-
 @app.route("/deck/<id>/create_card", methods=["GET", "POST"])
 def create_card(id):
+
+    if not 'user' in session:
+        return redirect(url_for("login"))
+
 
     if request.method == "POST":
 
         word = request.form['word']
         translation = request.form["translation"]
+        
+        card = CardsRepository.createCard(id, word, translation)
 
-        conn = database_context.connect()
-
-        sql_query = f"INSERT INTO card (deck_id, word, translation) VALUES ({id}, '{word}', '{translation}');"
-
-        cursor = conn.cursor()
-
-        cursor.execute(sql_query)
-
-        conn.commit()
-
-        if cursor.rowcount < 1:
+        
+        if CardsRepository.saveCardToDataBase(card):
             return "<h2>Error occured</h2>"
     
         return "<h2>gz</h2>"
