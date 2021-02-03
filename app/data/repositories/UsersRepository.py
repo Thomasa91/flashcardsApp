@@ -72,7 +72,7 @@ def saveUser(user: User):
     userPassword = user.password
     birthdate = user.birthday
 
-    query = f"""INSERT INTO user (user_name, user_email, user_password, date_of_birth) 
+    query = f"""INSERT INTO user (name, email, password, date_of_birth) 
                     VALUES ('{userName}', '{userEmail}', '{userPassword}', '{birthdate}');"""
 
     c = conn.cursor()

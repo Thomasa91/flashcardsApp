@@ -1,4 +1,13 @@
 from app import app_config
+
+# from app.data.models.User import User
+# from app.data.models.Deck import Deck
+# from app.data.models.Card import Card
+
+from app.data.repositories import UsersRepository
+from app.data.repositories import DecksRepository
+from app.data.repositories import CardsRepository
+
 import sqlite3
 import random
 import string
@@ -21,9 +30,9 @@ CREATE_CARD_TABLE_SQL = """CREATE TABLE IF NOT EXISTS card (
 
 CREATE_USERS_TABLE_SQL = """CREATE TABLE IF NOT EXISTS user (
                             user_id INTEGER PRIMARY KEY,
-                            user_name TEXT,
-                            user_email TEXT,
-                            user_password TEXT,
+                            name TEXT,
+                            email TEXT,
+                            password TEXT,
                             date_of_birth TEXT);"""
 
 MIN_NUMBER_OF_LETTERS = 5
@@ -80,101 +89,100 @@ def generate_random_translation():
 
 def generate_decks():
 
-    decks = []
+    users_id = [user.id for user in UsersRepository.fetchUsers()]
 
     number_of_decks = random.randint(MIN_NUMBER_OF_DECKS, MAX_NUMBER_OF_DECKS)
 
     for x in range(1, number_of_decks):
         
         name = generate_random_word()
-        decks.append(name)
+        user_id = random.choice(users_id)
 
-    return decks
-
+        deck = DecksRepository.createDeck(user_id, name)
+        DecksRepository.saveToDataBase(deck)
 
 def generate_cards():
-    cards = []
     
     number_of_cards = random.randint(MIN_NUMBER_OF_CARDS, MAX_NUMBER_OF_CARDS)
+    
+    decks_id = [deck.deck_id for deck in DecksRepository.fetch_decks()]
 
     for x in range(1, number_of_cards + 1):
 
         word = generate_random_word()
         translation = generate_random_translation()
-        cards.append({"word" : word, "translation": translation})
-
-    return cards
-
+        deck_id = random.choice(decks_id)    
+        card = CardsRepository.createCard(deck_id, word, translation)
+        CardsRepository.saveCardToDataBase(card)
+ 
+# Generate users and save them into database
 def generate_users():
-    users = []
-
+    
     number_of_users = random.randint(MIN_NUMBER_OF_USERS, MAX_NUMBER_OF_USERS)
 
-
     for x in range(1, number_of_users + 1):
-        user_name = generate_random_word()
-        user_email = generate_random_word(  ) + "@gmail.com"
-        user_password = generate_random_word()
+        name = generate_random_word()
+        email = generate_random_word(  ) + "@gmail.com"
+        password = generate_random_word()
         birthday = str(random.randint(1970, 2010))
 
-        users.append([user_name, user_email, user_password, birthday])
-    
-    return users
+        user = UsersRepository.createUser(name, email, password, birthday)
+        UsersRepository.saveUser(user)
 
-# INSERT DATA INTO TABLES
-def put_decks_into_table(conn, decks, users):
-    c = conn.cursor()
-    number_of_users = len(users)
+# INSEsaveUser(RT DATA INTO TABLES
+# def psaveUser(ut_decks_into_table(conn, decks, users):
+#     c = conn.cursor()
+#     number_of_users = len(users)
 
-    query = "INSERT INTO deck (name, user_id) VALUES"
+#     query = "INSERT INTO deck (name, user_id) VALUES"
 
-    for deck in decks:
+#     for deck in decks:
         
-        values = f"('{deck}', {random.randint(1, number_of_users)});"
+#         values = f"('{deck}', {random.randint(1, number_of_users)});"
 
-        c.execute(' '.join([query, values]))
+#         c.execute(' '.join([query, values]))
 
-    conn.commit()
+#     conn.commit()
 
-    return c.lastrowid
+#     return c.lastrowid
 
-def put_cards_into_table(conn, number_of_decks):
+# def put_cards_into_table(conn, number_of_decks):
 
-    c = conn.cursor()
+#     c = conn.cursor()
 
-    query = "INSERT INTO card (word, deck_id, translation) VALUES"
+#     query = "INSERT INTO card (word, deck_id, translation) VALUES"
 
-    cards = generate_cards()
+#     cards = generate_cards()
 
-    for card_index in range(0, len(cards)):
-        word = cards[card_index]["word"]
-        translation = cards[card_index]["translation"]
-        deck_index = random.randint(1, number_of_decks)
-        values = f"('{word}', {deck_index}, '{translation}');"
+#     for card_index in range(0, len(cards)):
+#         word = cards[card_index]["word"]
+#         translation = cards[card_index]["translation"]
+#         deck_index = random.randint(1, number_of_decks)
+#         values = f"('{word}', {deck_index}, '{translation}');"
 
-        c.execute(' '.join([query, values]))
+#         c.execute(' '.join([query, values]))
 
-    conn.commit()
+#     conn.commit()
 
-    return c.lastrowid
+#     return c.lastrowid
 
-def put_user_into_table(conn, users):
+# def put_user_into_table(conn, users):
 
-    c = conn.cursor()
+#     c = conn.cursor()
 
-    querry = "INSERT INTO user (user_name, user_email, user_password, date_of_birth) VALUES"
+#     querry = "INSERT INTO user (name, email, password, date_of_birth) VALUES"
 
-    for user in users:
+#     for user in users:
 
-        values = ', '.join(["'" + value + "'" for value in user])
-        values = ''.join(["(", values, ")", ";"])
+#         values = ', '.join(["'" + value + "'" for value in ussaveUser(er])
+#         values = ''.join(["(", values, ")", ";"])
 
-        c.execute(' '.join([querry, values]))
+#         c.execute(' '.join([querry, values]))
 
     
-    conn.commit()
+#     conn.commit()
 
-    return c.lastrowid
+#     return c.lastrowid
 
 
 if __name__ == "__main__":
@@ -184,10 +192,6 @@ if __name__ == "__main__":
     create_table(conn, CREATE_CARD_TABLE_SQL)
     create_table(conn, CREATE_USERS_TABLE_SQL)
 
-    decks = generate_decks()
-    cards = generate_cards()
-    users = generate_users()
-
-    put_decks_into_table(conn, decks, users)
-    put_cards_into_table(conn, len(decks))
-    put_user_into_table(conn, users)
+    generate_users()
+    generate_decks()
+    generate_cards()
