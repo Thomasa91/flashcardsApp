@@ -1,8 +1,5 @@
-from app import app_config
+from app.data import databaseConnection
 
-# from app.data.models.User import User
-# from app.data.models.Deck import Deck
-# from app.data.models.Card import Card
 
 from app.data.repositories import UsersRepository
 from app.data.repositories import DecksRepository
@@ -50,18 +47,6 @@ MAX_NUMBER_OF_DECKS = 6
 
 MIN_NUMBER_OF_USERS = 1
 MAX_NUMBER_OF_USERS = 4
-
-
-def create_connection(db_file):
-    conn = None
-
-    try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-    except Error as e:
-        print(e)
-
-    return conn
 
 
 # CREATE TABLES
@@ -115,7 +100,7 @@ def generate_cards():
         card = CardsRepository.createCard(deck_id, word, translation)
         CardsRepository.saveCardToDataBase(card)
  
-# Generate users and save them into database
+
 def generate_users():
     
     number_of_users = random.randint(MIN_NUMBER_OF_USERS, MAX_NUMBER_OF_USERS)
@@ -129,64 +114,9 @@ def generate_users():
         user = UsersRepository.createUser(name, email, password, birthday)
         UsersRepository.saveUser(user)
 
-# INSEsaveUser(RT DATA INTO TABLES
-# def psaveUser(ut_decks_into_table(conn, decks, users):
-#     c = conn.cursor()
-#     number_of_users = len(users)
-
-#     query = "INSERT INTO deck (name, user_id) VALUES"
-
-#     for deck in decks:
-        
-#         values = f"('{deck}', {random.randint(1, number_of_users)});"
-
-#         c.execute(' '.join([query, values]))
-
-#     conn.commit()
-
-#     return c.lastrowid
-
-# def put_cards_into_table(conn, number_of_decks):
-
-#     c = conn.cursor()
-
-#     query = "INSERT INTO card (word, deck_id, translation) VALUES"
-
-#     cards = generate_cards()
-
-#     for card_index in range(0, len(cards)):
-#         word = cards[card_index]["word"]
-#         translation = cards[card_index]["translation"]
-#         deck_index = random.randint(1, number_of_decks)
-#         values = f"('{word}', {deck_index}, '{translation}');"
-
-#         c.execute(' '.join([query, values]))
-
-#     conn.commit()
-
-#     return c.lastrowid
-
-# def put_user_into_table(conn, users):
-
-#     c = conn.cursor()
-
-#     querry = "INSERT INTO user (name, email, password, date_of_birth) VALUES"
-
-#     for user in users:
-
-#         values = ', '.join(["'" + value + "'" for value in ussaveUser(er])
-#         values = ''.join(["(", values, ")", ";"])
-
-#         c.execute(' '.join([querry, values]))
-
-    
-#     conn.commit()
-
-#     return c.lastrowid
-
 
 if __name__ == "__main__":
-    conn = create_connection(app_config.DATABASE_PATH)
+    conn = databaseConnection.connect()
 
     create_table(conn, CREATE_DECK_TABLE_SQL)
     create_table(conn, CREATE_CARD_TABLE_SQL)

@@ -24,12 +24,12 @@ def home():
 @app.route("/show_users")
 def users():
     
-    users = UsersRepository.fetchUsers()
+    users = UsersRepository.getUsers()
 
     info = []
 
     for user in users:
-        info.append(' '.join(str(info) for info in user.getUserDetails()))
+        info.append(' '.join(str(info) for info in user.getDetails()))
 
     return '<br>'.join(info)
 
@@ -37,7 +37,7 @@ def users():
 @app.route("/decks")
 def decks():
 
-    decks = DecksRepository.fetch_decks()
+    decks = DecksRepository.getDecks()
 
     return render_template("show_decks.html", decks = decks)
 
@@ -45,7 +45,7 @@ def decks():
 @app.route("/deck/<deck_id>")
 def display_cards(deck_id):
 
-    deck = DecksRepository.fech_deck_by_id(deck_id)
+    deck = DecksRepository.getById(deck_id)
 
     return render_template("show_cards.html", deck = deck)
 
@@ -53,7 +53,7 @@ def display_cards(deck_id):
 @app.route("/deck/<deck_id>/card/<card_id>")
 def card_detail(deck_id, card_id):
     
-    card = CardsRepository.returnCardById(card_id)
+    card = CardsRepository.getById(card_id)
 
     return render_template("card_detail.html", card = card)
 
@@ -61,7 +61,7 @@ def card_detail(deck_id, card_id):
 @app.route("/create_deck", methods=["POST", "GET"])
 def create_deck():
 
-    if not 'user' in session:
+    if 'user' not in session:
         return redirect(url_for("login"))
 
     if request.method == "POST":
@@ -70,15 +70,16 @@ def create_deck():
 
         user_id = json.loads(session['user'])['id']
 
-        deck = DecksRepository.createDeck(user_id, name)
+        deck = DecksRepository.create(user_id, name)
 
-        if DecksRepository.saveToDataBase(deck):
+        if DecksRepository.save(deck):
             return render_template("create_deck.html", success=True)
         else:
             return render_template("create_deck.html", success=False)
 
     else:
         return render_template("create_deck.html")
+
 
 @app.route("/deck/<id>/create_card", methods=["GET", "POST"])
 def create_card(id):
@@ -92,10 +93,10 @@ def create_card(id):
         word = request.form['word']
         translation = request.form["translation"]
         
-        card = CardsRepository.createCard(id, word, translation)
+        card = CardsRepository.create(id, word, translation)
 
         
-        if CardsRepository.saveCardToDataBase(card):
+        if CardsRepository.save(card):
             return "<h2>Error occured</h2>"
     
         return "<h2>gz</h2>"

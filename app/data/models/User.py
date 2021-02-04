@@ -52,12 +52,12 @@ class User:
 
         return True
 
-    def getUserDetails(self):
+    def getDetails(self):
 
         return [self.id, self.username, self.email, self.password, self.birthday]
 
 
-    def ifUserExists(self):
+    def ifExists(self):
         return UsersRepository.fetchUserByEmail(self.email)
 
 # RETURN JSON

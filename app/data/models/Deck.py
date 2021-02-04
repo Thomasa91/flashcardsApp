@@ -4,9 +4,9 @@ from app.data.repositories import CardsRepository
 class Deck:
 
 
-    def __init__(self, deck_id, user_id, name):
+    def __init__(self, id, user_id, name):
         
-        self.deck_id = deck_id
+        self.id = id
         self.user_id = user_id
         self.name = name
 
@@ -21,9 +21,9 @@ class Deck:
         return cls(*args)
 
 
-    def getDecksCards(self):
+    def getCards(self):
 
-        cards = CardsRepository.getCardsByDeckId(self.deck_id)
+        cards = CardsRepository.getCardsByDeckId(self.id)
 
         return cards
    

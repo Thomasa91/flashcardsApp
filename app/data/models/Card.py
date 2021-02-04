@@ -1,7 +1,7 @@
 class Card:
 
-    def __init__(self, card_id, deck_id, word, translation ):
-        self.card_id = card_id
+    def __init__(self, id, deck_id, word, translation ):
+        self.id = id
         self.deck_id = deck_id
         self.word = word
         self.translation = translation

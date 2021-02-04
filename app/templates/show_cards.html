@@ -2,7 +2,7 @@
 {% block body %}
     <h2>Add a new card</h2>
     <a id="card" href="/deck/{{ deck.deck_id }}/create_card">Add  new card</a>
-    {% for card in deck.getDecksCards() %}
+    {% for card in deck.getCards() %}
         <p>{{ card.word }}</p>
         <p><a id="details" href="/deck/{{ deck.deck_id }}/card/{{ card.card_id }}">See detail</a></p>     
     {% endfor %}

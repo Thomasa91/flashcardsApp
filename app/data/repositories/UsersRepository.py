@@ -5,7 +5,7 @@ conn = databaseConnection.connect()
 # TODO try to return dic instead of array OR return User object?
 
 
-def createUser(name, email, password, birthday):
+def create(name, email, password, birthday):
     return User.new_user(name, email, password, birthday)
 
 def user(data):
@@ -14,7 +14,7 @@ def user(data):
 
 # TODO return array or return array of User objects
 # TODO how to name methods fetchUsers/getUsers ?
-def fetchUsers():
+def getUsers():
     query = "SELECT * FROM user"
 
     c = conn.cursor()
@@ -29,7 +29,7 @@ def fetchUsers():
 
     return users
 
-def fetchUserById(user_id):
+def getUserById(user_id):
     query = f"SELECT * FROM user WHERE user_name = '{user_id}';"
 
     c = conn.cursor()
@@ -39,7 +39,7 @@ def fetchUserById(user_id):
     return user(c.fetchone())
 
 
-def fetchUserByName(username):
+def getUserByName(username):
     
     query = f"SELECT * FROM user WHERE user_name = '{username}';"
 
@@ -50,7 +50,7 @@ def fetchUserByName(username):
     return user(c.fetchone())
 
 # WHAT RETURN WHEN THERE IS NO USER IN DATABASE
-def fetchUserByEmail(email):
+def getUserByEmail(email):
 
     query = f"SELECT * FROM user WHERE user_email = '{email}';"
 
@@ -58,14 +58,14 @@ def fetchUserByEmail(email):
 
     c.execute(query)
 
-    user_from_data_base = c.fetchone()
+    dbUser = c.fetchone()
 
-    if user_from_data_base:
-        return user(user_from_data_base)
+    if dbUser:
+        return user(dbUser)
 
     return False
 
-def saveUser(user: User):
+def save(user: User):
     
     userName = user.username
     userEmail = user.email

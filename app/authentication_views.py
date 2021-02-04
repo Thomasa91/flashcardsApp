@@ -16,6 +16,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        # TODO add validation and change format
         birthday = request.form['birthDay'].split("-")[0]
 
 
@@ -30,7 +31,7 @@ def register():
         if not user.validateEmail():
             return "email has wrong format"
 
-        if UsersRepository.saveUser(user):
+        if UsersRepository.save(user):
             return "success"
 
         return "Something went wrong"

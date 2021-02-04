@@ -5,13 +5,13 @@ from app.data.models.Card import Card
 conn = databaseConnection.connect()
 
 
-def createCard(deck_id, word, translation):
+def create(deck_id, word, translation):
     return Card.new_card(deck_id, word, translation)
 
 def card(data):
     return Card.card(data)
 
-def returnCards():
+def getCards():
 
     query = "SELECT * FROM card"
 
@@ -27,7 +27,7 @@ def returnCards():
     return cards
 
 
-def getCardsByDeckId(deck_id):
+def getByDeckId(deck_id):
 
     query = f"SELECT * FROM card WHERE deck_id = {deck_id};"
 
@@ -42,7 +42,7 @@ def getCardsByDeckId(deck_id):
 
     return cards
 
-def returnCardById(card_id):
+def getById(card_id):
 
     query = f"SELECT * FROM card WHERE card_id = {card_id};"
 
@@ -52,7 +52,7 @@ def returnCardById(card_id):
 
     return card(c.fetchone())
 
-def saveCardToDataBase(card: Card):
+def save(card: Card):
 
     deck_id = card.deck_id
     word = card.word

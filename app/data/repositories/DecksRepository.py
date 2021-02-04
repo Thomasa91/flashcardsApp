@@ -6,7 +6,7 @@ from app.data.models.Deck import Deck
 conn = databaseConnection.connect()
 
 
-def createDeck(user_id, name):
+def create(user_id, name):
     return Deck.new_deck(user_id, name)
 
 
@@ -14,7 +14,7 @@ def deck(data):
     return Deck.deck(data)
 
 
-def fetch_decks():
+def getDecks():
 
     query = "SELECT * FROM deck"
 
@@ -29,7 +29,7 @@ def fetch_decks():
     
     return decks
 
-def fech_deck_by_id(id):
+def getById(id):
 
     query = f"SELECT * FROM deck WHERE deck_id = {id};"
 
@@ -40,7 +40,7 @@ def fech_deck_by_id(id):
     return deck(c.fetchone())
 
 
-def fech_deck_by_user_id(id):
+def getByUserId(id):
 
     query = f"SELECT * FROM deck WHERE user_id = {id};"
 
@@ -51,7 +51,7 @@ def fech_deck_by_user_id(id):
     return deck(c.fetchone())
 
 
-def saveToDataBase(deck : Deck):
+def save(deck : Deck):
     name = deck.name
     username_id = deck.user_id
 
