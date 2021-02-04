@@ -29,7 +29,7 @@ def getUsers():
 
     return users
 
-def getUserById(user_id):
+def getById(user_id):
     query = f"SELECT * FROM user WHERE user_name = '{user_id}';"
 
     c = conn.cursor()
@@ -39,7 +39,7 @@ def getUserById(user_id):
     return user(c.fetchone())
 
 
-def getUserByName(username):
+def getByName(username):
     
     query = f"SELECT * FROM user WHERE user_name = '{username}';"
 
@@ -50,7 +50,7 @@ def getUserByName(username):
     return user(c.fetchone())
 
 # WHAT RETURN WHEN THERE IS NO USER IN DATABASE
-def getUserByEmail(email):
+def getByEmail(email):
 
     query = f"SELECT * FROM user WHERE user_email = '{email}';"
 

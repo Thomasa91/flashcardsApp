@@ -20,10 +20,10 @@ def register():
         birthday = request.form['birthDay'].split("-")[0]
 
 
-        user = UsersRepository.createUser(username, email, password, birthday)
+        user = UsersRepository.create(username, email, password, birthday)
 
         # TODO change responses later/save user by using UsersRepository
-        if user.ifUserExists():
+        if user.ifExists():
             return "User already exits"
         if not user.validatePassword():
             return "at least 1 capital letter, 1 small letter, 1 number, length 8 - 20"
@@ -50,7 +50,7 @@ def login():
         username = request.form['username']
         password = request.form['password'] 
 
-        user = UsersRepository.fetchUserByName(username)
+        user = UsersRepository.getByName(username)
 
         if user:
 
