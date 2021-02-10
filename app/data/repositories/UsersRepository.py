@@ -14,7 +14,7 @@ def user(data):
 
 # TODO return array or return array of User objects
 # TODO how to name methods fetchUsers/getUsers ?
-def getUsers():
+def getAll():
     query = "SELECT * FROM user"
 
     c = conn.cursor()

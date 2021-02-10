@@ -11,7 +11,7 @@ def create(deck_id, word, translation):
 def card(data):
     return Card.card(data)
 
-def getCards():
+def getAll():
 
     query = "SELECT * FROM card"
 

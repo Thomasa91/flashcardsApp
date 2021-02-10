@@ -1,9 +1,16 @@
 from flask import render_template, request, session, redirect
 from flask.helpers import url_for
 
+import re
+
 from app import app
 from app.data.repositories import UsersRepository
 
+#TODO  Maybe later try to use cyptography library, using key to hash password ?
+# https://www.mssqltips.com/sqlservertip/5173/encrypting-passwords-for-use-with-python-and-sql-server/
+
+
+from hashlib import sha256
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -16,9 +23,10 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        # TODO add validation and change format
-        birthday = request.form['birthDay'].split("-")[0]
+        birthday = request.form['birthDay']
 
+        if not check_date_format(birthday):
+            return "something wrong"
 
         user = UsersRepository.create(username, email, password, birthday)
 
@@ -54,7 +62,8 @@ def login():
 
         if user:
 
-            if user.password == password:
+        
+            if user.password == hash_password(password):
 
                 session["user"] = user.to_json()
 
@@ -64,3 +73,19 @@ def login():
 
     else:
      return render_template("forms/login.html")
+
+#TODO WHERE I SHOULD HASH PASSWORD. USER CLASS ?
+#TODO WHERE TO PUT THOSE METHODS
+def hash_password(password):
+    h = sha256()
+
+    h.update(password)
+
+    return h.hexdigest().encode('utf-8')
+
+def check_date_format(date):
+
+    pattern = r"^\d{4}-\d{2}-\d{2}$"
+
+    return re.match(pattern, date)
+

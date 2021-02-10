@@ -14,7 +14,7 @@ def deck(data):
     return Deck.deck(data)
 
 
-def getDecks():
+def getAll():
 
     query = "SELECT * FROM deck"
 

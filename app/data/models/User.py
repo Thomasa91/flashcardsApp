@@ -29,9 +29,7 @@ class User:
 
         pattern = r"\.+@\w+.\w+"
 
-        # return re.match(pattern, self.email)
-
-        return True
+        return re.match(pattern, self.email)
 
 
     # VALIDATION DOESN'T WORK REFACOTR IT LATER
@@ -46,11 +44,10 @@ class User:
         # at least one number
         oneNumber = r"\d+"
         # min 8 characters, max 20
-        numberOfCharacters = r"\.{8, 20}"
+        numberOfCharacters = r"^\.{8, 20}$"
 
-        # return re.match(capitalLetter, password) and re.match(smallLetter, password) and re.match(oneNumber, password) and re.match(numberOfCharacters, password)
+        return re.match(capitalLetter, password) and re.match(smallLetter, password) and re.match(oneNumber, password) and re.match(numberOfCharacters, password)
 
-        return True
 
     def getDetails(self):
 
