@@ -21,9 +21,4 @@ class Deck:
         return cls(*args)
 
 
-    def getCards(self):
-
-        cards = CardsRepository.getCardsByDeckId(self.id)
-
-        return cards
    

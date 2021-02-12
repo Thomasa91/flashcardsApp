@@ -4,13 +4,10 @@ from flask.helpers import url_for
 import re
 
 from app import app
+#TODO should this file be in APP folder or out of it like now ?
+from help import crypto
 from app.data.repositories import UsersRepository
 
-#TODO  Maybe later try to use cyptography library, using key to hash password ?
-# https://www.mssqltips.com/sqlservertip/5173/encrypting-passwords-for-use-with-python-and-sql-server/
-
-
-from hashlib import sha256
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -28,18 +25,18 @@ def register():
         if not check_date_format(birthday):
             return "something wrong"
 
-        user = UsersRepository.create(username, email, password, birthday)
 
-        # TODO change responses later/save user by using UsersRepository
-        if user.ifExists():
+        # TODO change responses later/save user by using UsersRepositor
+        if UsersRepository.getByEmailUsername(username, email):
             return "User already exits"
+        #TODO still don't know where i should put those methods, maybe create form classes that will generate form, get data from it and put validation method there? I've seen something like this in frameworks. If it would be good exercise then I can do this :)
         if not user.validatePassword():
             return "at least 1 capital letter, 1 small letter, 1 number, length 8 - 20"
 
         if not user.validateEmail():
             return "email has wrong format"
 
-        if UsersRepository.save(user):
+        if UsersRepository.create(username, email, crypto.hash_password(password), birthday):
             return "success"
 
         return "Something went wrong"
@@ -62,9 +59,9 @@ def login():
 
         if user:
 
-        
-            if user.password == hash_password(password):
+            if user.password == crypto.hash_password(password):
 
+                # TODO how to store user in session now I use method to_json in user. is it okey or should do this in another way?
                 session["user"] = user.to_json()
 
                 return redirect(url_for("home"))
@@ -74,15 +71,8 @@ def login():
     else:
      return render_template("forms/login.html")
 
-#TODO WHERE I SHOULD HASH PASSWORD. USER CLASS ?
-#TODO WHERE TO PUT THOSE METHODS
-def hash_password(password):
-    h = sha256()
 
-    h.update(password)
-
-    return h.hexdigest().encode('utf-8')
-
+# TODO where to move this shit
 def check_date_format(date):
 
     pattern = r"^\d{4}-\d{2}-\d{2}$"

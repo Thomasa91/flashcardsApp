@@ -1,10 +1,10 @@
 {% extends "index.html" %}
 {% block body %}
     <h2>Add a new card</h2>
-    <a id="card" href="/deck/{{ deck.deck_id }}/create_card">Add  new card</a>
-    {% for card in deck.getCards() %}
+    <a id="card" href="/deck/{{ deck_id }}/create_card">Add  new card</a>
+    {% for card in cards %}
         <p>{{ card.word }}</p>
-        <p><a id="details" href="/deck/{{ deck.deck_id }}/card/{{ card.card_id }}">See detail</a></p>     
+        <p><a id="details" href="/deck/{{ deck_id }}/card/{{ card.card_id }}">See detail</a></p>     
     {% endfor %}
 {% endblock body %}
 <!-- <script src="../static/js/card_script.js"></script> -->

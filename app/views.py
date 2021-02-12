@@ -20,7 +20,7 @@ def home():
 
     return render_template("index.html")
 
-
+#TODO ADD ROLES/ ADD ADMIN PANEL ?
 @app.route("/show_users")
 def users():
     
@@ -45,9 +45,9 @@ def decks():
 @app.route("/deck/<deck_id>")
 def display_cards(deck_id):
 
-    deck = DecksRepository.getById(deck_id)
+    cards = CardsRepository.getByDeckId(deck_id)
 
-    return render_template("show_cards.html", deck = deck)
+    return render_template("show_cards.html", deck_id = deck_id, cards = cards)
 
 
 @app.route("/deck/<deck_id>/card/<card_id>")
@@ -72,7 +72,7 @@ def create_deck():
 
         deck = DecksRepository.create(user_id, name)
 
-        if DecksRepository.save(deck):
+        if DecksRepository.create(deck):
             return render_template("create_deck.html", success=True)
         else:
             return render_template("create_deck.html", success=False)
@@ -92,14 +92,13 @@ def create_card(id):
 
         word = request.form['word']
         translation = request.form["translation"]
-        
-        card = CardsRepository.create(id, word, translation)
-
-        
-        if CardsRepository.save(card):
-            return "<h2>Error occured</h2>"
     
-        return "<h2>gz</h2>"
+        if CardsRepository.create(id, word, translation):
+            return "<h2>gz</h2>"
+    
+        return "<h2>error</h2>"
 
     else:
         return render_template("create_card.html")
+
+# REVIEWS ENDPOINTS

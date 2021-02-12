@@ -1,45 +1,9 @@
-from logging import exception
 import unittest
 import re
 
 # TODO REFACTOR THIS TEST, USE FUNCTIONS FROM USER CLASS, NEED TO REFACTOR USER CLASS AND AUTHENTICATION ENDPOINT TO CHECK PASSWORD AND EMAIL
 
-
-def validatePassword(password):
-
-    # at least one cappital letter
-    capitalLetter = r"[A-Z]+"
-    # at least one small letter
-    smallLetter = r"[a-z]+"
-    # at least one number
-    oneNumber = r"\d+"
-    # min 8 characters, max 20
-    numberOfCharacters = r"^\.{8, 20}$"
-
-    if re.match(capitalLetter, password) and re.match(smallLetter, password) and re.match(oneNumber, password) and re.match(numberOfCharacters, password):
-        return False
-    
-    return True
-
-def validateEmail(email):
-
-    pattern = r"\.+@\w+.\w+"
-
-    if re.match(pattern, email):
-        return True
-
-    return False
-
-def check_date_format(date):
-
-    pattern = r"^\d{4}-\d{2}-\d{2}$"
-
-    if re.match(pattern, date):
-        return True
-    
-    return False
-
-
+# TODO I'm waiting to fefactor it for your decision where put validation methods. In other TODO i mentioned an idea.
 class regexTesting(unittest.TestCase):
     
     def test_password_valitation(self):
@@ -61,6 +25,7 @@ class regexTesting(unittest.TestCase):
 
 
         print("finish test password")
+        
     def test_email_validation(self):
 
         emails = {"tomaszgroch@gmail.com": True,
@@ -80,9 +45,10 @@ class regexTesting(unittest.TestCase):
                 print(error)
   
 
-    def test_date_validation(self):
+    def test_date_validation(self, dates):
 
         dates = {"1991-05-05": True,
+                "2012-13-05": True,
                 "1992-5-9": False,
                 "1991": False,
                 "1991-05": False,
@@ -92,10 +58,12 @@ class regexTesting(unittest.TestCase):
 
 
         for date, result in dates.items():
-            try:
-                self.assertEqual(check_date_format(date), result)
-            except AssertionError as error:
-                print(error)
+            
+            self.assertEqual(check_date_format(date), result)
+            # except AssertionError as error:
+            #     print(error)
+            
+             self.assertListEqual
 
 if __name__ == "__main__":
     unittest.main()

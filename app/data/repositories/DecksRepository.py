@@ -7,7 +7,22 @@ conn = databaseConnection.connect()
 
 
 def create(user_id, name):
-    return Deck.new_deck(user_id, name)
+
+    name = name
+    user_id = user_id
+
+    query = f"INSERT INTO deck (name, user_id) VALUES ('{name}', {user_id});"
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    conn.commit()
+
+    if c.lastrowid:
+        return True
+    
+    return False
 
 
 def deck(data):
@@ -49,18 +64,3 @@ def getByUserId(id):
     c.execute(query)
 
     return deck(c.fetchone())
-
-
-def save(deck : Deck):
-    name = deck.name
-    username_id = deck.user_id
-
-    query = f"INSERT INTO deck (name, user_id) VALUES ('{name}', {username_id});"
-
-    c = conn.cursor()
-
-    c.execute(query)
-
-    conn.commit()
-
-    return c.lastrowid

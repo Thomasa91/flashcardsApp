@@ -1,15 +1,33 @@
 from app.data import databaseConnection
 from app.data.models.Card import Card
 
-
+# NEXT CONN :/
 conn = databaseConnection.connect()
 
 
 def create(deck_id, word, translation):
-    return Card.new_card(deck_id, word, translation)
+
+    deck_id = deck_id
+    word = word
+    translation = translation
+
+    query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    conn.commit()
+
+    if c.lastrowid:
+        return True
+    
+    return False
+
 
 def card(data):
     return Card.card(data)
+
 
 def getAll():
 
@@ -42,6 +60,7 @@ def getByDeckId(deck_id):
 
     return cards
 
+
 def getById(card_id):
 
     query = f"SELECT * FROM card WHERE card_id = {card_id};"
@@ -51,20 +70,3 @@ def getById(card_id):
     c.execute(query)
 
     return card(c.fetchone())
-
-def save(card: Card):
-
-    deck_id = card.deck_id
-    word = card.word
-    translation = card.translation
-
-
-    query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"
-
-    c = conn.cursor()
-
-    c.execute(query)
-
-    conn.commit()
-
-    return c.lastrowid

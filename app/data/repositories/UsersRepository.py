@@ -1,19 +1,40 @@
 from app.data import databaseConnection
 from app.data.models.User import User
 
+# TODO i make connection here what means that it creates connection when app starts, it happens to all repositories where I have 3 different connections how i can change it and where i should close that connections I haven't implemented it yet.
+
 conn = databaseConnection.connect()
-# TODO try to return dic instead of array OR return User object?
 
 
 def create(name, email, password, birthday):
-    return User.new_user(name, email, password, birthday)
+
+        
+    name = name
+    email = email
+    password = password
+    birthday = birthday
+    
+    query = f"""INSERT INTO user (name, email, password, date_of_birth) 
+                    VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
+
+    conn = databaseConnection.connect()
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    conn.commit()
+
+    if c.lastrowid:
+        return True
+    
+    return False
+
 
 def user(data):
     return User.user(data)
 
 
-# TODO return array or return array of User objects
-# TODO how to name methods fetchUsers/getUsers ?
 def getAll():
     query = "SELECT * FROM user"
 
@@ -29,6 +50,11 @@ def getAll():
 
     return users
 
+
+def getByEmailUsername():
+    return "huj"
+
+    
 def getById(user_id):
     query = f"SELECT * FROM user WHERE user_name = '{user_id}';"
 
@@ -65,20 +91,15 @@ def getByEmail(email):
 
     return False
 
-def save(user: User):
-    
-    userName = user.username
-    userEmail = user.email
-    userPassword = user.password
-    birthdate = user.birthday
+def getByEmailUsername(name, email):
 
-    query = f"""INSERT INTO user (name, email, password, date_of_birth) 
-                    VALUES ('{userName}', '{userEmail}', '{userPassword}', '{birthdate}');"""
+    query = f"SELECT * FROM user WHERE name = '{name}' AND email = '{email}';"
 
     c = conn.cursor()
 
     c.execute(query)
 
-    conn.commit()
-
-    return c.lastrowid
+    if c.fetchone:
+        return user(c.fetchone)
+    
+    return False

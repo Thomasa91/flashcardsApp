@@ -5,8 +5,6 @@ from app.data.repositories import UsersRepository
 
 class User:
     # TODO should i have validation methods here or to implement them in another way ?
-    # TODO when i create a new user I don't have id, what to do with it
-    # TODO crypt the password
     def __init__(self, id, username, email, password, birthday):
         self.id = id
         self.username = username
