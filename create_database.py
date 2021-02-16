@@ -11,7 +11,7 @@ import string
 
 from sqlite3 import Error
 
-# TODO remember to use later sqlite3 method execute(querry, [values])!!
+# TODO remember to use later sqlite3 method execute(query, [values])!!
 CREATE_DECK_TABLE_SQL = """CREATE TABLE IF NOT EXISTS deck (
                             deck_id INTEGER PRIMARY KEY,
                             user_id INTEGER,

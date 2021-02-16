@@ -22,30 +22,6 @@ class User:
     def user(cls, args):
         return cls(*args)
 
-    # OF COURSE IT DOESN'T WORK....
-    def validateEmail(self):
-
-        pattern = r"\.+@\w+.\w+"
-
-        return re.match(pattern, self.email)
-
-
-    # VALIDATION DOESN'T WORK REFACOTR IT LATER
-    def validatePassword(self):
-
-        password = self.password
-
-        # at least one cappital letter
-        capitalLetter = r"[A-Z]+"
-        # at least one small letter
-        smallLetter = r"[a-z]+"
-        # at least one number
-        oneNumber = r"\d+"
-        # min 8 characters, max 20
-        numberOfCharacters = r"^\.{8, 20}$"
-
-        return re.match(capitalLetter, password) and re.match(smallLetter, password) and re.match(oneNumber, password) and re.match(numberOfCharacters, password)
-
 
     def getDetails(self):
 

@@ -4,8 +4,10 @@ from flask.helpers import url_for
 import re
 
 from app import app
-#TODO should this file be in APP folder or out of it like now ?
-from help import crypto
+
+
+from app.utilities import crypto
+from app.utilities import register_validation as validation
 from app.data.repositories import UsersRepository
 
 
@@ -20,20 +22,19 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        birthday = request.form['birthDay']
+        birthday = request.form['birthday']
 
-        if not check_date_format(birthday):
+        # TODO change return statements
+        if not validation.validate_date_format(birthday):
             return "something wrong"
 
-
-        # TODO change responses later/save user by using UsersRepositor
         if UsersRepository.getByEmailUsername(username, email):
             return "User already exits"
-        #TODO still don't know where i should put those methods, maybe create form classes that will generate form, get data from it and put validation method there? I've seen something like this in frameworks. If it would be good exercise then I can do this :)
-        if not user.validatePassword():
+
+        if not validation.validate_password(password):
             return "at least 1 capital letter, 1 small letter, 1 number, length 8 - 20"
 
-        if not user.validateEmail():
+        if not validation.validate_email(email):
             return "email has wrong format"
 
         if UsersRepository.create(username, email, crypto.hash_password(password), birthday):
@@ -61,7 +62,6 @@ def login():
 
             if user.password == crypto.hash_password(password):
 
-                # TODO how to store user in session now I use method to_json in user. is it okey or should do this in another way?
                 session["user"] = user.to_json()
 
                 return redirect(url_for("home"))
@@ -70,12 +70,3 @@ def login():
 
     else:
      return render_template("forms/login.html")
-
-
-# TODO where to move this shit
-def check_date_format(date):
-
-    pattern = r"^\d{4}-\d{2}-\d{2}$"
-
-    return re.match(pattern, date)
-

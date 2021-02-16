@@ -3,7 +3,7 @@ from app.data import databaseConnection
 from app.data.models.Deck import Deck
 
 
-conn = databaseConnection.connect()
+conn = databaseConnection.conn
 
 
 def create(user_id, name):

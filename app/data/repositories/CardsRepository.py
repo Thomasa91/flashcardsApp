@@ -1,8 +1,8 @@
 from app.data import databaseConnection
 from app.data.models.Card import Card
 
-# NEXT CONN :/
-conn = databaseConnection.connect()
+
+conn = databaseConnection.conn
 
 
 def create(deck_id, word, translation):

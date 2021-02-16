@@ -1,10 +1,8 @@
 from app.data import databaseConnection
 from app.data.models.User import User
 
-# TODO i make connection here what means that it creates connection when app starts, it happens to all repositories where I have 3 different connections how i can change it and where i should close that connections I haven't implemented it yet.
 
-conn = databaseConnection.connect()
-
+conn = databaseConnection.conn
 
 def create(name, email, password, birthday):
 
