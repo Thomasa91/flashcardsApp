@@ -1,8 +1,8 @@
-from app.data import databaseConnection
+from app.data import dbConn
 from app.data.models.Card import Card
 
 
-conn = databaseConnection.conn
+conn = dbConn.get()
 
 
 def create(deck_id, word, translation):

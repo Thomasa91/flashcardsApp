@@ -23,6 +23,9 @@ CREATE_CARD_TABLE_SQL = """CREATE TABLE IF NOT EXISTS card (
                             deck_id INTEGER,
                             word TEXT,
                             translation TEXT,
+                            created_at TEXT,
+                            ease_factor INTEGER,
+                            review_date TEXT,
                             FOREIGN KEY(deck_id) REFERENCES deck(deck_id));"""
 
 CREATE_USERS_TABLE_SQL = """CREATE TABLE IF NOT EXISTS user (

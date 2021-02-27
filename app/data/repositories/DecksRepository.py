@@ -1,9 +1,9 @@
 from app.data.repositories.UsersRepository import user
-from app.data import databaseConnection
+from app.data import dbConn
 from app.data.models.Deck import Deck
 
 
-conn = databaseConnection.conn
+conn = dbConn.get()
 
 
 def create(user_id, name):

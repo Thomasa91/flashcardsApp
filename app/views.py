@@ -100,3 +100,5 @@ def create_card(id):
 
     else:
         return render_template("create_card.html")
+
+

@@ -1,8 +1,8 @@
-from app.data import databaseConnection
+from app.data import dbConn
 from app.data.models.User import User
 
 
-conn = databaseConnection.conn
+conn = dbConn.get()
 
 def create(name, email, password, birthday):
 
@@ -14,8 +14,6 @@ def create(name, email, password, birthday):
     
     query = f"""INSERT INTO user (name, email, password, date_of_birth) 
                     VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
-
-    conn = databaseConnection.connect()
 
     c = conn.cursor()
 

@@ -4,7 +4,7 @@ from app.data.repositories import UsersRepository
 
 
 class User:
-    # TODO should i have validation methods here or to implement them in another way ?
+
     def __init__(self, id, username, email, password, birthday):
         self.id = id
         self.username = username
@@ -31,6 +31,6 @@ class User:
     def ifExists(self):
         return UsersRepository.fetchUserByEmail(self.email)
 
-# RETURN JSON
+
     def to_json(self):
         return json.dumps(self.__dict__)

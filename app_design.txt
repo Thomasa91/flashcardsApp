@@ -48,3 +48,9 @@ IF YOU HAVE SOME IDEAS THAT I CAN DO IN THIS APP WIRTE IT HERE
 TODO maybe it would be difficult I don't know but maybe make an option when you make flashcards with a word that you don't know and on each review app will give you different sentences from the internet with that world instead of having only one context or only translation OR SIMPLE during review you will be able to ask for examples and app will give you some 2-3 random sentences from the internet. MAYBE FROM DICTIONARY WEBSITE.
 
 TODO using some library let users see some theirs statistics ? like showing a chart of how many reviews they did every day in the last week? HOW to store data like this
+
+
+JWT
+cookies 
+computer science
+

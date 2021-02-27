@@ -7,7 +7,7 @@ from app import app
 
 
 from app.utilities import crypto
-from app.utilities import register_validation as validation
+from app import register_validation as validation
 from app.data.repositories import UsersRepository
 
 
@@ -26,7 +26,7 @@ def register():
 
         # TODO change return statements
         if not validation.validate_date_format(birthday):
-            return "something wrong"
+            return "wrong date format"
 
         if UsersRepository.getByEmailUsername(username, email):
             return "User already exits"
