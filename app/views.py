@@ -1,8 +1,5 @@
-from flask.helpers import url_for
-from werkzeug.utils import redirect
-from app.data.models.Deck import Deck
-from flask import render_template, request
-from flask.globals import session
+from flask import url_for, redirect, render_template, request, session
+
 from app import app
 import json
 
@@ -16,51 +13,44 @@ from app.data.repositories import CardsRepository
 def home():
     if "user" in session:
         user = session["user"]
-        return render_template("index.html", user = user)
+        return render_template("index.html", user=user)
 
     return render_template("index.html")
 
-#TODO ADD ROLES/ ADD ADMIN PANEL ?
+
+# TODO ADD ROLES
 @app.route("/show_users")
-def users():
-    
-    users = UsersRepository.getUsers()
+def show_users():
+    users = UsersRepository.get_all()
 
-    info = []
+    info = '<br>'.join([' '.join([str(info) for info in user.get_details()]) for user in users])
 
-    for user in users:
-        info.append(' '.join(str(info) for info in user.getDetails()))
-
-    return '<br>'.join(info)
+    return info
 
 
 @app.route("/decks")
 def decks():
+    decks = DecksRepository.get_all()
 
-    decks = DecksRepository.getDecks()
-
-    return render_template("show_decks.html", decks = decks)
+    return render_template("show_decks.html", decks=decks)
 
 
 @app.route("/deck/<deck_id>")
 def display_cards(deck_id):
+    cards = CardsRepository.get_by_deck_id(deck_id)
 
-    cards = CardsRepository.getByDeckId(deck_id)
-
-    return render_template("show_cards.html", deck_id = deck_id, cards = cards)
+    return render_template("show_cards.html", deck_id=deck_id, cards=cards)
 
 
 @app.route("/deck/<deck_id>/card/<card_id>")
 def card_detail(deck_id, card_id):
-    
-    card = CardsRepository.getById(card_id)
+    card = CardsRepository.get_by_id(card_id)
 
-    return render_template("card_detail.html", card = card)
+    return render_template("card_detail.html", card=card)
 
 
 @app.route("/create_deck", methods=["POST", "GET"])
 def create_deck():
-
     if 'user' not in session:
         return redirect(url_for("login"))
 
@@ -72,7 +62,7 @@ def create_deck():
 
         deck = DecksRepository.create(user_id, name)
 
-        if DecksRepository.create(deck):
+        if deck:
             return render_template("create_deck.html", success=True)
         else:
             return render_template("create_deck.html", success=False)
@@ -82,23 +72,20 @@ def create_deck():
 
 
 @app.route("/deck/<id>/create_card", methods=["GET", "POST"])
-def create_card(id):
+def create_card(card_id):
+    if 'user' in session:
 
-    if not 'user' in session:
-        return redirect(url_for("login"))
+        if request.method == "POST":
 
+            word = request.form['word']
+            translation = request.form["translation"]
 
-    if request.method == "POST":
+            if CardsRepository.create(card_id, word, translation):
+                return "<h2>gz</h2>"
 
-        word = request.form['word']
-        translation = request.form["translation"]
-    
-        if CardsRepository.create(id, word, translation):
-            return "<h2>gz</h2>"
-    
-        return "<h2>error</h2>"
+            return "<h2>error</h2>"
 
-    else:
-        return render_template("create_card.html")
+        else:
+            return render_template("create_card.html")
 
-
+    return redirect(url_for("login"))

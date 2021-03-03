@@ -3,7 +3,7 @@
 {% block body %}
     
     {% for deck in decks %}
-        <p>{{ deck.deck_id }}  {{ deck.name }}</p><a href="/deck/{{ deck.deck_id }}">View cards</a>
+        <p>{{ deck.id }}  {{ deck.name }}</p><a href="/deck/{{ deck.id }}">View cards</a>
     {% endfor %}
 
 {% endblock body %}

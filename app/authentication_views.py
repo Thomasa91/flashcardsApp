@@ -1,16 +1,12 @@
-from flask import render_template, request, session, redirect
-from flask.helpers import url_for
-
-import re
-
+from flask import render_template, request, session, redirect, url_for
 from app import app
-
 
 from app.utilities import crypto
 from app import register_validation as validation
 from app.data.repositories import UsersRepository
 
 
+# TODO add  generic error messages
 @app.route("/register", methods=["POST", "GET"])
 def register():
 
@@ -28,14 +24,14 @@ def register():
         if not validation.validate_date_format(birthday):
             return "wrong date format"
 
-        if UsersRepository.getByEmailUsername(username, email):
+        if UsersRepository.get_by_username_email(username, email):
             return "User already exits"
 
         if not validation.validate_password(password):
             return "at least 1 capital letter, 1 small letter, 1 number, length 8 - 20"
 
         if not validation.validate_email(email):
-            return "email has wrong format"
+            return "wrong email format"
 
         if UsersRepository.create(username, email, crypto.hash_password(password), birthday):
             return "success"
@@ -56,7 +52,7 @@ def login():
         username = request.form['username']
         password = request.form['password'] 
 
-        user = UsersRepository.getByName(username)
+        user = UsersRepository.get_by_name(username)
 
         if user:
 
@@ -69,4 +65,4 @@ def login():
         return "something went wrong"
 
     else:
-     return render_template("forms/login.html")
+        return render_template("forms/login.html")

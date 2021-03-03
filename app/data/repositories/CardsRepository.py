@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from app.data import dbConn
 from app.data.models.Card import Card
 
@@ -5,11 +7,7 @@ from app.data.models.Card import Card
 conn = dbConn.get()
 
 
-def create(deck_id, word, translation):
-
-    deck_id = deck_id
-    word = word
-    translation = translation
+def create(deck_id, word, translation) -> bool:
 
     query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"
 
@@ -21,15 +19,15 @@ def create(deck_id, word, translation):
 
     if c.lastrowid:
         return True
-    
+
     return False
 
 
-def card(data):
+def card(data: list) -> Card:
     return Card.card(data)
 
 
-def getAll():
+def get_all() -> List[Card]:
 
     query = "SELECT * FROM card"
 
@@ -45,7 +43,7 @@ def getAll():
     return cards
 
 
-def getByDeckId(deck_id):
+def get_by_deck_id(deck_id: int) -> List[Card]:
 
     query = f"SELECT * FROM card WHERE deck_id = {deck_id};"
 
@@ -61,7 +59,7 @@ def getByDeckId(deck_id):
     return cards
 
 
-def getById(card_id):
+def get_by_id(card_id: int) -> Optional[Card]:
 
     query = f"SELECT * FROM card WHERE card_id = {card_id};"
 
@@ -69,4 +67,9 @@ def getById(card_id):
 
     c.execute(query)
 
-    return card(c.fetchone())
+    card_details = c.fetchone()
+
+    if card_details:
+        return card(card_details)
+
+    return None

@@ -1,5 +1,3 @@
-IMPORTANTE READ IT ALL PLX
-
 
 TODO user should be able to edit card/ delete it
 TODO user should be able to edit deck/ delete it
@@ -38,19 +36,10 @@ TODO I know that you can write code to generate create migrations to the databas
 
 TODO user cookies/ learn how they work. make later JWT
 
-TODO make the app public, implement a paymenet and get rich
+
 TODO implement logging by google account or something like that ? implement some payments method as an exercise ?
 
-TODO QUESTION if I want to play with web scraping, hacking, datascience with python is it worth it to play around a little bit or only focus on making that app.
-
-IF YOU HAVE SOME IDEAS THAT I CAN DO IN THIS APP WIRTE IT HERE
 
 TODO maybe it would be difficult I don't know but maybe make an option when you make flashcards with a word that you don't know and on each review app will give you different sentences from the internet with that world instead of having only one context or only translation OR SIMPLE during review you will be able to ask for examples and app will give you some 2-3 random sentences from the internet. MAYBE FROM DICTIONARY WEBSITE.
 
 TODO using some library let users see some theirs statistics ? like showing a chart of how many reviews they did every day in the last week? HOW to store data like this
-
-
-JWT
-cookies 
-computer science
-

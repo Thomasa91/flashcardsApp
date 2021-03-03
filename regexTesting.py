@@ -1,12 +1,12 @@
-import unittest
-import re
-# TODO with file in this folder app/TDD/regexTesting.py can't find app.utilities need to be fixed.
 from app import register_validation as validation
 from app.utilities.utilities import is_leap_year
 
+import unittest
+
+
 # TODO try pytest later
-class regexTesting(unittest.TestCase):
-    
+class RegexTesting(unittest.TestCase):
+
     def test_password_validation(self):
 
         passwords = {
@@ -21,23 +21,12 @@ class regexTesting(unittest.TestCase):
 
         for password, expected in passwords.items():
             try:
-                
                 actual = validation.validate_password(password)
+                self.assertEqual(actual, expected, msg.format(password, expected, actual))
             except AssertionError as error:
                 print(error)
 
-        
     def test_email_validation(self):
-
-        # emails = {
-        #     "tomaszgroch@gmail.com": True,
-        #     "tomkielolsd91@gmail.com": True,
-        #     "tomibomi@o2.pl" : True,
-        #     "lubieplacki": False,
-        #     "9232193923": False,
-        #     "czoko@o2.plO2@02.com": False}
-
-    
 
         valid_emails = [
             "email@example.com",
@@ -72,9 +61,6 @@ class regexTesting(unittest.TestCase):
             "email@example..com"
         ]
 
-        # "email@111.222.333.44444" giving True :(
-
-
         msg = "Test {0} expected {1} actual {2}"
 
         expected = True
@@ -94,8 +80,6 @@ class regexTesting(unittest.TestCase):
                 self.assertEqual(actual, expected, msg.format(email, expected, actual))
             except AssertionError as error:
                 print(error)
-  
-
 
     def test_date_validation(self):
 
@@ -116,7 +100,6 @@ class regexTesting(unittest.TestCase):
             "1991": False,
             "1991-05": False,
             "1991/05/05": False,
-            "2012-13-05": False, 
             "05-03-1991": False,
             "1899-01-01": False} 
 
@@ -128,8 +111,7 @@ class regexTesting(unittest.TestCase):
                 actual = validation.validate_date_format(date)
                 self.assertEqual(actual, expected, msg.format(date, expected, actual))
             except AssertionError as error:
-                    print(error)
-
+                print(error)
 
     def test_is_leap_year(self):
 
