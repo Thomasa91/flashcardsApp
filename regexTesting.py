@@ -11,7 +11,7 @@ class RegexTesting(unittest.TestCase):
 
         passwords = {
             'abcAbc12': True,
-            '123456A@': True,
+            '123456Ab@': True,
             '123123abcABC': True,
             'Abc456': False,
             'abcabcabc': False,

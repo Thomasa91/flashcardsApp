@@ -44,6 +44,9 @@ def validate_date_format(input_date: str) -> bool:
 
     year, month, day = list(map(lambda x: int(x), match.groups()))
 
+    if year < 1900:
+        return False
+
     try:
         user_date = date(year, month, day)
     except ValueError:
