@@ -10,12 +10,12 @@ class RegexTesting(unittest.TestCase):
     def test_password_validation(self):
 
         passwords = {
-            'Roszek91': True,
-            'Tomeczek1991': True,
-            'LubiePlacki12@@@:': True,
-            'Tom91': False,
-            'tomekbomek': False,
-            'TomeczekSromeczek': False}
+            'abcAbc12': True,
+            '123456A@': True,
+            '123123abcABC': True,
+            'Abc456': False,
+            'abcabcabc': False,
+            'AbcdefgAbcdefg': False}
 
         msg = "Test {0} expected {1} actual {2}"
 
