@@ -10,7 +10,7 @@ class RegexTesting(unittest.TestCase):
     def test_password_validation(self):
 
         passwords = {
-            'Roszek91' : True,
+            'Roszek91': True,
             'Tomeczek1991': True,
             'LubiePlacki12@@@:': True,
             'Tom91': False,
@@ -26,6 +26,7 @@ class RegexTesting(unittest.TestCase):
             except AssertionError as error:
                 print(error)
 
+    # Not needed, external library email validation is used
     def test_email_validation(self):
 
         valid_emails = [
@@ -71,7 +72,7 @@ class RegexTesting(unittest.TestCase):
                 self.assertEqual(actual, expected, msg.format(email, expected, actual))
             except AssertionError as error:
                 print(error)
-  
+
         expected = False
 
         for email in invalid_emails:
@@ -101,13 +102,13 @@ class RegexTesting(unittest.TestCase):
             "1991-05": False,
             "1991/05/05": False,
             "05-03-1991": False,
-            "1899-01-01": False} 
+            "1899-01-01": False}
 
         msg = "Test {0} expected {1} actual {2}"
 
         for date, expected in dates.items():
 
-            try:            
+            try:
                 actual = validation.validate_date_format(date)
                 self.assertEqual(actual, expected, msg.format(date, expected, actual))
             except AssertionError as error:
@@ -116,13 +117,13 @@ class RegexTesting(unittest.TestCase):
     def test_is_leap_year(self):
 
         years = {
-                2000: True,
-                2004: True,
-                2005: False,
-                1997: False,
-                1900: False
-                }
-        
+            2000: True,
+            2004: True,
+            2005: False,
+            1997: False,
+            1900: False
+        }
+
         msg = "Test {0} expected {1} actual {2}"
 
         for year, expected in years.items():

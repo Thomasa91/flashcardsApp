@@ -81,9 +81,9 @@ def create_card(card_id):
             translation = request.form["translation"]
 
             if CardsRepository.create(card_id, word, translation):
-                return "<h2>gz</h2>"
+                return "<h2>New card has been created</h2>"
 
-            return "<h2>error</h2>"
+            return "<h2>There was some error</h2>"
 
         else:
             return render_template("create_card.html")

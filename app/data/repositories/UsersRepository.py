@@ -8,10 +8,10 @@ from app.data.models.User import User
 conn = dbConn.get()
 
 
-def create(name: str, email: str, password: str, birthday: str) -> bool:
+def create(name: str, email: str, password: str, birthday: str) -> Optional[User]:
   
     query = f"""INSERT INTO user (name, email, password, date_of_birth) 
-                    VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
+            VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
 
     c = conn.cursor()
 
@@ -19,14 +19,12 @@ def create(name: str, email: str, password: str, birthday: str) -> bool:
 
     conn.commit()
 
-    if c.lastrowid:
-        return True
+    user_id = c.lastrowid
 
-    return False
+    if user_id:
+        return User(user_id, name, email, password, birthday)
 
-
-def user(data: list) -> Optional[User]:
-    return User.user(data)
+    return None
 
 
 def get_all() -> List[User]:
@@ -41,7 +39,7 @@ def get_all() -> List[User]:
 
     for user_data in c.fetchall():
         
-        users.append(user(user_data))
+        users.append(User(*user_data))
 
     return users
 
@@ -57,14 +55,14 @@ def get_by_id(user_id: int) -> Optional[User]:
     user_details = c.fetchone()
 
     if user_details:
-        return user(c.fetchone()) 
+        return User(*user_details)
 
     return None
 
 
 def get_by_name(username: str) -> Optional[User]:
     
-    query = f"SELECT * FROM user WHERE user_name = '{username}';"
+    query = f"SELECT * FROM user WHERE name = '{username}';"
 
     c = conn.cursor()
 
@@ -73,14 +71,14 @@ def get_by_name(username: str) -> Optional[User]:
     user_details = c.fetchone()
 
     if user_details:
-        return user(user_details)
+        return User(*user_details)
     
     return None
 
 
 def get_by_email(email: str) -> Optional[User]:
 
-    query = f"SELECT * FROM user WHERE user_email = '{email}';"
+    query = f"SELECT * FROM user WHERE email = '{email}';"
 
     c = conn.cursor()
 
@@ -89,7 +87,7 @@ def get_by_email(email: str) -> Optional[User]:
     user_details = c.fetchone()
 
     if user_details:
-        return user(user_details)
+        return User(*user_details)
 
     return None
 
@@ -105,6 +103,6 @@ def get_by_username_email(username, email) -> Optional[User]:
     user_details = c.fetchone()
 
     if user_details:
-        return user(user_details)
+        return User(*user_details)
     
     return None

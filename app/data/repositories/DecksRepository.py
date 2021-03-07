@@ -5,7 +5,7 @@ from typing import List, Optional
 conn = dbConn.get()
 
 
-def create(user_id: int, name: str) -> bool:
+def create(user_id: int, name: str) -> Optional[Deck]:
 
     query = f"INSERT INTO deck (name, user_id) VALUES ('{name}', {user_id});"
 
@@ -15,15 +15,12 @@ def create(user_id: int, name: str) -> bool:
 
     conn.commit()
 
-    if c.lastrowi:
-        return True
+    deck_id = c.lastrowid
 
-    return False
+    if deck_id:
+        return Deck(deck_id, user_id, name)
 
-
-# TODO how to name that function in all Repositories
-def deck(data) -> Deck:
-    return Deck.deck(data)
+    return None
 
 
 def get_all() -> List[Deck]:
@@ -37,7 +34,7 @@ def get_all() -> List[Deck]:
     decks = []
 
     for deck_data in c.fetchall():
-        decks.append(deck(deck_data))
+        decks.append(Deck(*deck_data))
     
     return decks
 
@@ -53,7 +50,7 @@ def get_by_id(deck_id: int) -> Optional[Deck]:
     deck_details = c.fetchone()
 
     if deck_details:
-        return deck(deck_details)
+        return Deck(*deck_details)
     
     return None
 
@@ -69,6 +66,6 @@ def get_by_user_id(user_id: int) -> List[Deck]:
     decks = []
 
     for deck_details in c.fetchall():
-        decks.append(deck(deck_details))
+        decks.append(Deck(*deck_details))
 
     return decks

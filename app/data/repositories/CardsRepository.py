@@ -7,7 +7,7 @@ from app.data.models.Card import Card
 conn = dbConn.get()
 
 
-def create(deck_id, word, translation) -> bool:
+def create(deck_id, word, translation) -> Optional[Card]:
 
     query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"
 
@@ -17,14 +17,12 @@ def create(deck_id, word, translation) -> bool:
 
     conn.commit()
 
-    if c.lastrowid:
-        return True
+    card_id = c.lastrowid
 
-    return False
+    if card_id:
+        return Card(card_id, deck_id, word, translation)
 
-
-def card(data: list) -> Card:
-    return Card.card(data)
+    return None
 
 
 def get_all() -> List[Card]:
@@ -38,7 +36,7 @@ def get_all() -> List[Card]:
     cards = []
 
     for data in c.fetchall():
-        cards.append(card(data))
+        cards.append(Card(*data))
 
     return cards
 
@@ -54,7 +52,7 @@ def get_by_deck_id(deck_id: int) -> List[Card]:
     cards = []
 
     for card_data in c.fetchall():
-        cards.append(card(card_data))
+        cards.append(Card(*card_data))
 
     return cards
 
@@ -70,6 +68,6 @@ def get_by_id(card_id: int) -> Optional[Card]:
     card_details = c.fetchone()
 
     if card_details:
-        return card(card_details)
+        return Card(*card_details)
 
     return None
