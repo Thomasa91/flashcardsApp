@@ -20,7 +20,6 @@ def register():
         password = request.form['password']
         birthday = request.form['birthday']
 
-        # TODO change return statements
         if not validation.validate_date_format(birthday):
             return "wrong date format"
 

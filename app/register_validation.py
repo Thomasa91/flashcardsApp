@@ -4,7 +4,8 @@ from datetime import date, timedelta
 
 from email_validator import validate_email as check_email, EmailNotValidError
 
-# Use logging
+
+# Use logging library
 def validate_password(password) -> bool:
     # at least one capital letter
     capital_letter = r"[A-Z]"
