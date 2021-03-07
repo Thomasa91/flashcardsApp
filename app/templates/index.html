@@ -11,7 +11,7 @@
     <a href="{{ url_for('decks') }}">Decks</a>
     <br>
     {% if user %}
-        <p>Hello {{ user }}</p>
+        <p>Hello {{ user.username }}</p>
     {% endif %}
     {% block body %}
     {% endblock %}

@@ -1,3 +1,4 @@
+create_database.py
 app/database.db
-app/__pycache__
 .idea
+**/__pycache__

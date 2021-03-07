@@ -1,63 +1,17 @@
-from app.data import databaseConnection
-from app.data.models import User
+from typing import Optional, List
 
-conn = databaseConnection.connect()
-# TODO try to return dic instead of array OR return User object?
-def fetchUsers():
-    query = "SELECT * FROM user"
-
-    c = conn.cursor()
-
-    c.execute(query)
-
-    return c.fetchall()
-
-def fetchUserById(user_id):
-    query = f"SELECT * FROM user WHERE user_name = '{user_id}';"
-
-    c = conn.cursor()
-
-    c.execute(query)
-    
-    return c.fetchone()
+from app.data import dbConn
+from app.data.models.Deck import Deck
+from app.data.models.User import User
 
 
-def fetchUserByName(username):
-    
-    query = f"SELECT * FROM user WHERE user_name = '{username}';"
-
-    c = conn.cursor()
-
-    c.execute(query)
-    
-    user = User(c.fetchone())
-
-    if user.ifUserExists():
-        return user
-
-    return None
+conn = dbConn.get()
 
 
-def fetchUserByEmail(email):
-
-    query = f"SELECT * FROM user WHERE user_email = '{email}';"
-
-    c = conn.cursor()
-
-    c.execute(query)
-
-    return c.fetchone()
-
-
-def saveUser(user: User):
-    
-    userName = user.username
-    userEmail = user.email
-    userPassword = user.password
-    birthDate = user.birthDay
-
-    query = f"""INSERT INTO user (user_name, user_email, user_password, date_of_birth) 
-                    VALUES ('{userName}', '{userEmail}', '{userPassword}', '{birthDate}');"""
+def create(name: str, email: str, password: str, birthday: str) -> Optional[User]:
+  
+    query = f"""INSERT INTO user (name, email, password, date_of_birth) 
+            VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
 
     c = conn.cursor()
 
@@ -65,4 +19,90 @@ def saveUser(user: User):
 
     conn.commit()
 
-    return c.lastrowid()
+    user_id = c.lastrowid
+
+    if user_id:
+        return User(user_id, name, email, password, birthday)
+
+    return None
+
+
+def get_all() -> List[User]:
+
+    query = "SELECT * FROM user"
+
+    c = conn.cursor()
+
+    c.execute(query)
+    
+    users = []
+
+    for user_data in c.fetchall():
+        
+        users.append(User(*user_data))
+
+    return users
+
+    
+def get_by_id(user_id: int) -> Optional[User]:
+
+    query = f"SELECT * FROM user WHERE user_name = '{user_id}';"
+
+    c = conn.cursor()
+
+    c.execute(query)
+    
+    user_details = c.fetchone()
+
+    if user_details:
+        return User(*user_details)
+
+    return None
+
+
+def get_by_name(username: str) -> Optional[User]:
+    
+    query = f"SELECT * FROM user WHERE name = '{username}';"
+
+    c = conn.cursor()
+
+    c.execute(query)
+    
+    user_details = c.fetchone()
+
+    if user_details:
+        return User(*user_details)
+    
+    return None
+
+
+def get_by_email(email: str) -> Optional[User]:
+
+    query = f"SELECT * FROM user WHERE email = '{email}';"
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    user_details = c.fetchone()
+
+    if user_details:
+        return User(*user_details)
+
+    return None
+
+
+def get_by_username_email(username, email) -> Optional[User]:
+
+    query = f"SELECT * FROM user WHERE name = '{username}' AND email = '{email}';"
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    user_details = c.fetchone()
+
+    if user_details:
+        return User(*user_details)
+    
+    return None
