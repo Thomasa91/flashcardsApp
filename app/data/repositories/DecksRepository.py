@@ -2,6 +2,10 @@ from app.data import dbConn
 from app.data.models.Deck import Deck
 from typing import List, Optional
 
+from app import logger
+
+deck_repo_logger = logger.getChild(__name__)
+
 conn = dbConn.get()
 
 
@@ -18,8 +22,10 @@ def create(user_id: int, name: str) -> Optional[Deck]:
     deck_id = c.lastrowid
 
     if deck_id:
+        deck_repo_logger.debug("Deck with id:{deck_id} has been saved into database successfully ")
         return Deck(deck_id, user_id, name)
 
+    deck_repo_logger.warning("Saving deck into database failed")
     return None
 
 
@@ -36,6 +42,7 @@ def get_all() -> List[Deck]:
     for deck_data in c.fetchall():
         decks.append(Deck(*deck_data))
     
+    deck_repo_logger.debug("Retrieved all deck recrods from database")
     return decks
 
 
@@ -50,8 +57,10 @@ def get_by_id(deck_id: int) -> Optional[Deck]:
     deck_details = c.fetchone()
 
     if deck_details:
+        deck_repo_logger.debug(f"Deck with id:{deck_id} found in database")
         return Deck(*deck_details)
     
+    deck_repo_logger.debug(f"User with id:{deck_id} not found in database")
     return None
 
 
@@ -68,4 +77,5 @@ def get_by_user_id(user_id: int) -> List[Deck]:
     for deck_details in c.fetchall():
         decks.append(Deck(*deck_details))
 
+    deck_repo_logger.debug(f"Retrived decks with user_id:{user_id} from database")
     return decks

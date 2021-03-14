@@ -71,8 +71,8 @@ def create_deck():
         return render_template("create_deck.html")
 
 
-@app.route("/deck/<id>/create_card", methods=["GET", "POST"])
-def create_card(card_id):
+@app.route("/deck/<deck_id>/create_card", methods=["GET", "POST"])
+def create_card(deck_id):
     if 'user' in session:
 
         if request.method == "POST":
@@ -80,7 +80,7 @@ def create_card(card_id):
             word = request.form['word']
             translation = request.form["translation"]
 
-            if CardsRepository.create(card_id, word, translation):
+            if CardsRepository.create(deck_id, word, translation):
                 return "<h2>New card has been created</h2>"
 
             return "<h2>There was some error</h2>"

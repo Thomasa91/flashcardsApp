@@ -1,4 +1,6 @@
-from app.data.models.Card import Card
+from app import logger
+
+deck_logger = logger.getChild(__name__)
 
 
 class Deck:
@@ -7,3 +9,8 @@ class Deck:
         self.id = deck_id
         self.user_id = user_id
         self.name = name
+
+        deck_logger.debug(f"Deck with id {self.id} has been created") 
+    
+    def __del__(self):
+        deck_logger.debug(f"Deck with id {self.id} has been destroyed")

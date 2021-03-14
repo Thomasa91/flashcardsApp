@@ -5,6 +5,9 @@ from app.utilities import crypto
 from app import register_validation as validation
 from app.data.repositories import UsersRepository
 
+from app import logger
+
+logger = logger.getChild(__name__)
 
 # TODO add  generic error messages
 @app.route("/register", methods=["POST", "GET"])
@@ -54,7 +57,7 @@ def login():
         user = UsersRepository.get_by_name(username)
 
         if user:
-
+            logger.info(' '.join(user.get_details))
             if user.password == crypto.hash_password(password):
 
                 session["user"] = user.to_json()
