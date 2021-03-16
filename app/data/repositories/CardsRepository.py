@@ -32,7 +32,7 @@ def create(deck_id, word, translation) -> Optional[Card]:
 
 
 def get_all() -> List[Card]:
-
+    
     query = "SELECT * FROM card"
 
     c = conn.cursor()

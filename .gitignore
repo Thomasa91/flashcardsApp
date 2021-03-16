@@ -2,3 +2,4 @@ create_database.py
 app/database.db
 .idea
 **/__pycache__
+app/logs/file.log

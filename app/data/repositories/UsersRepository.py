@@ -47,7 +47,8 @@ def get_all() -> List[User]:
         
         users.append(User(*user_data))
 
-    user_repo_logger.debug("Retrived all user records from database")
+    user_repo_logger.debug("Retrieved all user records from database")
+    user_repo_logger.trace("Retrieved all user records from database")
     return users
 
     
