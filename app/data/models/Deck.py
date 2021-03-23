@@ -1,6 +1,4 @@
-from app import logger
-
-deck_logger = logger.getChild(__name__)
+from app.logs.logger import logger
 
 
 class Deck:
@@ -9,8 +7,9 @@ class Deck:
         self.id = deck_id
         self.user_id = user_id
         self.name = name
+        logger.debug(
+            f"Deck with id {self.id}, user_id:{self.user_id}, name:{self.name} has been created")
 
-        deck_logger.debug(f"Deck with id {self.id} has been created") 
-    
     def __del__(self):
-        deck_logger.debug(f"Deck with id {self.id} has been destroyed")
+        logger.debug(
+            f"Deck with id {self.id}, user_id:{self.user_id}, name:{self.name} has been destroyed")

@@ -1,11 +1,10 @@
 import sqlite3
 from sqlite3 import Error
-from app import logger
+from app.logs.logger import logger
 
-db_logger = logger.getChild(__name__)
 
 from app import app_config
-
+from app import app
 
 def connect():
 
@@ -14,12 +13,12 @@ def connect():
         # tech_same_thread=False repaired it
         connection = sqlite3.connect(app_config.DATABASE_PATH, check_same_thread=False)
 
-        db_logger.debug("Successfully connected to database")
+        logger.debug("Successfully connected to database")
         return connection
 
     except Error as e:
-        db_logger.critical("Connection to database failed", exc_info=True)        
-
+        logger.critical("Connection to database failed", exc_info=True)        
+        
 
 conn = connect()
 

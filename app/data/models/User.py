@@ -1,8 +1,7 @@
 from app.data.models.Deck import Deck
-from app import logger
+from app.logs.logger import logger
 import json
 
-user_logger = logger.getChild(__name__)
 
 class User:
 
@@ -13,11 +12,12 @@ class User:
         self.password = password
         self.birthday = birthday
 
-        user_logger.debug(f"User with id {self.id} has been created")
+        logger.debug(
+            f"User with id:{self.id}, username:{self.username} has been created")
 
     def __del__(self):
-        user_logger.debug(f"User with id {self.id} has been destroyed")
-
+        logger.debug(
+            f"User with id:{self.id}, username:{self.username} has been destroyed")
 
     def get_details(self) -> list:
         return [self.id, self.username, self.email, self.password, self.birthday]
