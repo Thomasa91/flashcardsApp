@@ -1,4 +1,4 @@
-from app.logs.logger import logger
+from app.utilities.logger import logger
 
 
 class Deck:

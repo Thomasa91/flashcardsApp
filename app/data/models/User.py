@@ -1,5 +1,4 @@
-from app.data.models.Deck import Deck
-from app.logs.logger import logger
+from app.utilities.logger import logger
 import json
 
 

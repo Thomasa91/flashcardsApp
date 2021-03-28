@@ -1,10 +1,9 @@
 from typing import Optional, List
 
 from app.data import dbConn
-from app.data.models.Deck import Deck
 from app.data.models.User import User
 
-from app.logs.logger import logger
+from app.utilities.logger import logger
 
 
 conn = dbConn.get()

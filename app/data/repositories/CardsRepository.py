@@ -3,7 +3,7 @@ from typing import List, Optional
 from app.data import dbConn
 from app.data.models.Card import Card
 
-from app.logs.logger import logger
+from app.utilities.logger import logger
 
 
 conn = dbConn.get()
@@ -18,8 +18,6 @@ def create(deck_id: int, word: str, translation: str) -> Optional[Card]:
     c.execute(query)
 
     conn.commit()
-
-    conn.Error
 
     card_id = c.lastrowid
 
