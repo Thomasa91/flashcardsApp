@@ -8,7 +8,7 @@ h = sha256()
 
 
 def hash_password(password):
-    # TODO change it
+
     logger.debug("hashing password")
     h.update(bytes(password, "utf-8"))
 

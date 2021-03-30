@@ -1,5 +1,5 @@
-from app.data import dbConn
-from app.data.models.Deck import Deck
+from app.src import dbConn
+from app.src.models.Deck import Deck
 from typing import List, Optional
 
 from app.utilities.logger import logger
@@ -22,7 +22,7 @@ def create(user_id: int, name: str) -> Optional[Deck]:
 
     if deck_id:
         logger.debug(
-            "Deck with id:{deck_id} has been saved into database successfully ")
+            "Deck with id:{deck_id} has been saved into database successfully")
         return Deck(deck_id, user_id, name)
 
     logger.error("Saving deck into database failed")
@@ -42,7 +42,7 @@ def get_all() -> List[Deck]:
     for deck_data in c.fetchall():
         decks.append(Deck(*deck_data))
 
-    logger.debug(f"Retrieved {len(decks)} deck recrods from database")
+    logger.debug(f"Retrieved {len(decks)} deck records from database")
     return decks
 
 

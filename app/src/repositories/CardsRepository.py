@@ -1,14 +1,14 @@
 from typing import List, Optional
 
-from app.data import dbConn
-from app.data.models.Card import Card
+from app.src import dbConn
+from app.src.models.Card import Card
 
 from app.utilities.logger import logger
 
 
 conn = dbConn.get()
 
-
+#TODO implement exception handling 
 def create(deck_id: int, word: str, translation: str) -> Optional[Card]:
 
     query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"

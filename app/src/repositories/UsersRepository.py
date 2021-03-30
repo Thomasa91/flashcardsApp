@@ -1,7 +1,7 @@
 from typing import Optional, List
 
-from app.data import dbConn
-from app.data.models.User import User
+from app.src import dbConn
+from app.src.models.User import User
 
 from app.utilities.logger import logger
 
@@ -27,7 +27,7 @@ def create(name: str, email: str, password: str, birthday: str) -> Optional[User
         logger.debug(f"User with id:{user_id} name:{name} has been created")
         return User(user_id, name, email, password, birthday)
 
-    logger.error("Saving user into database failed")
+    logger.error(f"Saving user {name} into database failed")
     return None
 
 

@@ -4,9 +4,9 @@ from app import app
 import json
 
 # import repositories
-from app.data.repositories import UsersRepository
-from app.data.repositories import DecksRepository
-from app.data.repositories import CardsRepository
+from app.src.repositories import UsersRepository
+from app.src.repositories import DecksRepository
+from app.src.repositories import CardsRepository
 
 from app.utilities.logger import logger
 
@@ -14,7 +14,7 @@ from app.utilities.logger import logger
 @app.route("/")
 def home():
 
-    logger.info("Handling '/' route, route is called")
+    logger.info("Handling '/' route")
 
     if "user" in session:
         user = session["user"]
@@ -25,7 +25,8 @@ def home():
 
         return render_template("index.html", user=user)
 
-    logger.info("Handling '/' route, Rendering index.html")
+    logger.info(
+        "Handling '/' route, user is not authenticated Rendering index.html")
 
     return render_template("index.html")
 
@@ -33,11 +34,11 @@ def home():
 @app.route("/show_users")
 def show_users():
 
-    logger.info("Handling '/show_user' route, route is called")
+    logger.info("Handling '/show_user' route")
 
     users = UsersRepository.get_all()
 
-    logger.info("Handling '/show_user' route, rendering all users data")
+    logger.info("Handling '/show_user' route, rendering all users src")
 
     info = '<br>'.join(
         [' '.join([str(info) for info in user.get_details()]) for user in users])
@@ -48,7 +49,7 @@ def show_users():
 @app.route("/decks")
 def decks():
 
-    logger.info("Handling '/decks' route, route is called")
+    logger.info("Handling '/decks' route")
     decks = DecksRepository.get_all()
 
     logger.info("Handling '/decks' route, rendering show_decks.html")
@@ -59,7 +60,7 @@ def decks():
 @app.route("/deck/<int:deck_id>")
 def display_cards(deck_id: int):
 
-    logger.info(f"Handling '/deck/{deck_id}' route, route is called")
+    logger.info(f"Handling '/deck/{deck_id}' route")
 
     cards = CardsRepository.get_by_deck_id(deck_id)
 
@@ -72,9 +73,14 @@ def display_cards(deck_id: int):
 def card_detail(deck_id: int, card_id: int):
 
     logger.info(
-        f"Handling '/deck/{deck_id}/card/{card_id}' route, route is called")
+        f"Handling '/deck/{deck_id}/card/{card_id}' route")
 
     card = CardsRepository.get_by_id(card_id)
+
+    if not card:
+        logger.error(
+            f"Handling '/deck/{deck_id}/card/{card_id}' route, card with id: {card_id} doesn't exist")
+        return "Card doesn't exist"
 
     logger.info(
         "Handling '/deck/{deck_id}/card/{card_id}' route, rendering card_detail.html")
@@ -84,7 +90,7 @@ def card_detail(deck_id: int, card_id: int):
 @app.route("/create_deck", methods=["POST", "GET"])
 def create_deck():
 
-    logger.info("Handling '/create_deck' route, route is called")
+    logger.info("Handling '/create_deck' route")
 
     if 'user' not in session:
         logger.info("Handling '/create_deck, user is not authenticated")
@@ -93,13 +99,13 @@ def create_deck():
 
     username = json.loads(session['user'])['username']
     logger.info(
-        f"Handling '/create_deck, user username{username} is authenticated")
+        f"Handling '/create_deck, user {username} is authenticated")
 
     if request.method == "POST":
 
         name = request.form['name']
-        logger.info("Handling '/create_deck, create_deck form is submitted")
-        logger.info(f"Handling '/create_deck, deck name:{name}")
+        logger.info(
+            f"Handling '/create_deck, create_deck form is submitted. Form details deck_name:{name}")
 
         user_id = json.loads(session['user'])['id']
 
@@ -107,24 +113,23 @@ def create_deck():
 
         if deck:
             logger.info(
-                "Handling '/create_deck, deck is created and saved into database")
+                "Handling '/create_deck, deck is created")
             logger.info("Handling '/create_deck, rendering create_deck.html")
             return render_template("create_deck.html", success=True)
-        else:
-            logger.info(
-                "Handling '/create_deck, deck is not created and is not saved into database")
-            logger.info("Handling '/create_deck, rendering create_deck.html")
-            return render_template("create_deck.html", success=False)
 
-    else:
+        logger.error(
+            "Handling '/create_deck, deck is not created")
         logger.info("Handling '/create_deck, rendering create_deck.html")
-        return render_template("create_deck.html")
+        return render_template("create_deck.html", success=False)
+
+    logger.info("Handling '/create_deck, rendering create_deck.html")
+    return render_template("create_deck.html")
 
 
 @app.route("/deck/<int:deck_id>/create_card", methods=["GET", "POST"])
 def create_card(deck_id: int):
     logger.info(
-        f"Handling '/deck/{deck_id}/create_card' route, route is called")
+        f"Handling '/deck/{deck_id}/create_card' route")
 
     if 'user' not in session:
         logger.info(
@@ -135,32 +140,30 @@ def create_card(deck_id: int):
 
     logger.info(
         f"Handling '/deck/{deck_id}/create_card' route, user is authenticated")
-    
+
     if request.method == "POST":
 
-        logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, create_card form is submitted")
         word = request.form['word']
         translation = request.form["translation"]
 
         logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, card details word: {word}, translation: {translation}")
+            f"Handling '/deck/{deck_id}/create_card' route, create_card form is submitted. Form details word: {word}, translation: {translation}")
 
-        if CardsRepository.create(deck_id, word, translation):
-            logger.info(
-                f"Handling '/deck/{deck_id}/create_card' route, card is created and saved into database")
+        if not CardsRepository.create(deck_id, word, translation):
+            logger.error(
+                f"Handling '/deck/{deck_id}/create_card' route, card has been not created")
             logger.info(
                 f"Handling '/deck/{deck_id}/create_card' route, rendering response")
-            return "<h2>New card has been created</h2>"
+
+            return "<h2>There was some error</h2>"
 
         logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, card has been not created")
+            f"Handling '/deck/{deck_id}/create_card' route, card is createde")
         logger.info(
             f"Handling '/deck/{deck_id}/create_card' route, rendering response")
-        return "<h2>There was some error</h2>"
 
-    else:
+        return "<h2>New card has been created</h2>"
 
-        logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, rendering create_card.html")
-        return render_template("create_card.html")
+    logger.info(
+        f"Handling '/deck/{deck_id}/create_card' route, user is authenticated. Rendering create_card.html")
+    return render_template("create_card.html")

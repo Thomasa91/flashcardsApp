@@ -7,7 +7,7 @@ from flask import request
 
 from app.config import app_config
 
-
+# TODO terminate server when conn to db failed and or try to conn again
 def connect():
 
     try:
