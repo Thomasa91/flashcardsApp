@@ -1,11 +1,11 @@
 from flask import render_template, request, session, redirect, url_for
 from app import app
 
-from app.utilities import crypto
+from app.src.utilities import crypto
 from app import register_validation as validation
 from app.src.repositories import UsersRepository
 
-from app.utilities.logger import logger
+from app.src.utilities.logger import logger
 
 
 # TODO add  generic error messages
@@ -38,6 +38,7 @@ def register():
             logger.error(
                 f"Handling '/register' route, registering new user {username} failed: User already exits")
             return "User already exits"
+
         # TODO return more detailed information
         if not validation.validate_password(password):
             logger.error(
@@ -50,7 +51,7 @@ def register():
             return "wrong email format"
 
         if not UsersRepository.create(username, email, crypto.hash_password(password), birthday):
-            return "something went wrong"
+            return "User has been not created"
 
         logger.info(
             f"Handling '/register' route, registering new user {username} is finished successfully")
@@ -67,7 +68,8 @@ def login():
 
     logger.info("Handling '/login' route")
     if "user" in session:
-        logger.info("Handling '/login' route,  user is authenticated. Redirecting to route '/home'")
+        logger.info(
+            "Handling '/login' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
 
     if request.method == "POST":
@@ -81,21 +83,20 @@ def login():
         # TODO change responses
         if not user:
             logger.error(
-                f"Handling '/login' route, authenticating user {user.username} failed: Invalid username")
+                f"Handling '/login' route, authenticating user {username} failed: Invalid username")
             return "invalid username"
         if not user.password == crypto.hash_password(password):
             logger.error(
-                f"Handling '/login' route, authenticating user {user.username} failed: Invalid password")
+                f"Handling '/login' route, authenticating user {username} failed: Invalid password")
             return "invalid password"
 
         session["user"] = user.to_json()
         logger.info(
-            f"Handling '/login' route, authenticating user {user.username} finished successfully")
+            f"Handling '/login' route, authenticating user {username} finished successfully")
         logger.info(
             "Handling '/login' route, user is authenticated. Redirecting to route 'home'")
         return redirect(url_for("home"))
 
-    
     logger.info(
         "Handling '/login' route, user is not authenticated. Rendering login.html")
     return render_template("forms/login.html")

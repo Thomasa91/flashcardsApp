@@ -1,5 +1,5 @@
 from app import register_validation as validation
-from app.utilities.utilities import is_leap_year
+from app.src.utilities.utilities import is_leap_year
 
 import unittest
 

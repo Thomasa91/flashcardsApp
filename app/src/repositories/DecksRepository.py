@@ -2,7 +2,7 @@ from app.src import dbConn
 from app.src.models.Deck import Deck
 from typing import List, Optional
 
-from app.utilities.logger import logger
+from app.src.utilities.logger import logger
 
 
 conn = dbConn.get()

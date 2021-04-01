@@ -8,7 +8,7 @@ from app.src.repositories import UsersRepository
 from app.src.repositories import DecksRepository
 from app.src.repositories import CardsRepository
 
-from app.utilities.logger import logger
+from app.src.utilities.logger import logger
 
 
 @app.route("/")
@@ -17,7 +17,7 @@ def home():
     logger.info("Handling '/' route")
 
     if "user" in session:
-        user = session["user"]
+        user = json.loads(session["user"])
 
         logger.info(
             f"Handling '/' route, User {user['username']} is authenticated")
@@ -26,7 +26,7 @@ def home():
         return render_template("index.html", user=user)
 
     logger.info(
-        "Handling '/' route, user is not authenticated Rendering index.html")
+        "Handling '/' route, user is not authenticated, rendering index.html")
 
     return render_template("index.html")
 
@@ -155,15 +155,15 @@ def create_card(deck_id: int):
             logger.info(
                 f"Handling '/deck/{deck_id}/create_card' route, rendering response")
 
-            return "<h2>There was some error</h2>"
+            return "<h2>Card has been not created</h2>"
 
         logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, card is createde")
+            f"Handling '/deck/{deck_id}/create_card' route, card is created")
         logger.info(
             f"Handling '/deck/{deck_id}/create_card' route, rendering response")
 
         return "<h2>New card has been created</h2>"
 
     logger.info(
-        f"Handling '/deck/{deck_id}/create_card' route, user is authenticated. Rendering create_card.html")
+        f"Handling '/deck/{deck_id}/create_card' route, user is authenticated, rendering create_card.html")
     return render_template("create_card.html")

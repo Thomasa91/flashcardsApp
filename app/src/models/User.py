@@ -1,4 +1,4 @@
-from app.utilities.logger import logger
+from app.src.utilities.logger import logger
 import json
 
 

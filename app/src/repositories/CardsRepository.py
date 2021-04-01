@@ -3,7 +3,7 @@ from typing import List, Optional
 from app.src import dbConn
 from app.src.models.Card import Card
 
-from app.utilities.logger import logger
+from app.src.utilities.logger import logger
 
 
 conn = dbConn.get()

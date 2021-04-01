@@ -3,7 +3,7 @@ from typing import Optional, List
 from app.src import dbConn
 from app.src.models.User import User
 
-from app.utilities.logger import logger
+from app.src.utilities.logger import logger
 
 
 conn = dbConn.get()
