@@ -21,7 +21,7 @@ def home():
 
         logger.info(
             f"Handling '/' route, User {user['username']} is authenticated")
-        logger.info("Handling '/' route, Rendering index.html")
+        logger.info("Handling '/' route, rendering index.html")
 
         return render_template("index.html", user=user)
 

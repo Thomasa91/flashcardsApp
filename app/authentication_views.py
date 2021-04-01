@@ -94,9 +94,9 @@ def login():
         logger.info(
             f"Handling '/login' route, authenticating user {username} finished successfully")
         logger.info(
-            "Handling '/login' route, user is authenticated. Redirecting to route 'home'")
+            "Handling '/login' route, user is authenticated, redirecting to route 'home'")
         return redirect(url_for("home"))
 
     logger.info(
-        "Handling '/login' route, user is not authenticated. Rendering login.html")
+        "Handling '/login' route, user is not authenticated, rendering login.html")
     return render_template("forms/login.html")
