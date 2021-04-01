@@ -14,7 +14,7 @@ def validate_password(password) -> bool:
     # at least one number
     one_number = r"\d"
     # min 8 characters, max 20
-    number_of_characters = r".{8,20}"
+    number_of_characters = r".{8,64}"
 
     # boolean operation check it/cast bool
     return (re.search(capital_letter, password) and re.search(small_letter, password) and

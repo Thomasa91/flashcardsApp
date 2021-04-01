@@ -1,4 +1,4 @@
-from app.data.models.Deck import Deck
+from app.src.utilities.logger import logger
 import json
 
 
@@ -10,6 +10,13 @@ class User:
         self.email = email
         self.password = password
         self.birthday = birthday
+
+        logger.debug(
+            f"User with id:{self.id}, username:{self.username} has been created")
+
+    def __del__(self):
+        logger.debug(
+            f"User with id:{self.id}, username:{self.username} has been destroyed")
 
     def get_details(self) -> list:
         return [self.id, self.username, self.email, self.password, self.birthday]
