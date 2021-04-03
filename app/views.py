@@ -10,6 +10,7 @@ from app.src.repositories import CardsRepository
 
 from app.src.utilities.logger import logger
 
+from app.src.utilities.decorators import login_required
 
 @app.route("/")
 def home():
@@ -30,23 +31,8 @@ def home():
 
     return render_template("index.html")
 
-
-@app.route("/show_users")
-def show_users():
-
-    logger.info("Handling '/show_user' route")
-
-    users = UsersRepository.get_all()
-
-    logger.info("Handling '/show_user' route, rendering all users src")
-
-    info = '<br>'.join(
-        [' '.join([str(info) for info in user.get_details()]) for user in users])
-
-    return info
-
-
 @app.route("/decks")
+@login_required
 def decks():
 
     logger.info("Handling '/decks' route")
@@ -58,6 +44,7 @@ def decks():
 
 
 @app.route("/deck/<int:deck_id>")
+@login_required
 def display_cards(deck_id: int):
 
     logger.info(f"Handling '/deck/{deck_id}' route")
@@ -70,6 +57,7 @@ def display_cards(deck_id: int):
 
 
 @app.route("/deck/<int:deck_id>/card/<int:card_id>")
+@login_required
 def card_detail(deck_id: int, card_id: int):
 
     logger.info(
@@ -88,6 +76,7 @@ def card_detail(deck_id: int, card_id: int):
 
 
 @app.route("/create_deck", methods=["POST", "GET"])
+@login_required
 def create_deck():
 
     logger.info("Handling '/create_deck' route")
@@ -127,6 +116,7 @@ def create_deck():
 
 
 @app.route("/deck/<int:deck_id>/create_card", methods=["GET", "POST"])
+@login_required
 def create_card(deck_id: int):
     logger.info(
         f"Handling '/deck/{deck_id}/create_card' route")

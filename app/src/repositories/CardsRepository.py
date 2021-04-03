@@ -1,4 +1,5 @@
 from typing import List, Optional
+from sqlite3 import Error
 
 from app.src import dbConn
 from app.src.models.Card import Card
@@ -15,19 +16,27 @@ def create(deck_id: int, word: str, translation: str) -> Optional[Card]:
 
     c = conn.cursor()
 
-    c.execute(query)
 
-    conn.commit()
+    try:
+        c.execute(query)
+        conn.commit()
+
+    except Error as err:
+        logger.error("Saving card into database failed", exc_info=True)
+        return None        
 
     card_id = c.lastrowid
+    
 
-    if card_id:
-        logger.debug(
-            f"Card with id {card_id} has been saved into database successfully")
-        return Card(card_id, deck_id, word, translation)
+    
+    # if card_id:
+    #     logger.debug(
+    #         f"Card with id {card_id} has been saved into database successfully")
+    #     return Card(card_id, deck_id, word, translation)
 
-    logger.error("Saving card into database failed")
-    return None
+
+    # logger.error("Saving card into database failed")
+    # return None
 
 
 def get_all() -> List[Card]:

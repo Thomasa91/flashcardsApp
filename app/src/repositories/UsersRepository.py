@@ -11,7 +11,7 @@ conn = dbConn.get()
 
 def create(name: str, email: str, password: str, birthday: str) -> Optional[User]:
 
-    query = f"""INSERT INTO user (name, email, password, date_of_birth) 
+    query = f"""INSERT INTO user (username, email, password, birthday) 
             VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
 
     c = conn.cursor()
@@ -25,7 +25,7 @@ def create(name: str, email: str, password: str, birthday: str) -> Optional[User
     if user_id:
 
         logger.debug(f"User with id:{user_id} name:{name} has been created")
-        return User(user_id, name, email, password, birthday)
+        return User(user_id, email, password, birthday)
 
     logger.error(f"Saving user {name} into database failed")
     return None
@@ -51,7 +51,7 @@ def get_all() -> List[User]:
 
 def get_by_id(user_id: int) -> Optional[User]:
 
-    query = f"SELECT * FROM user WHERE user_name = '{user_id}';"
+    query = f"SELECT * FROM user WHERE id = '{user_id}';"
 
     c = conn.cursor()
 
@@ -68,9 +68,9 @@ def get_by_id(user_id: int) -> Optional[User]:
     return None
 
 
-def get_by_name(username: str) -> Optional[User]:
+def get_by_username(username: str) -> Optional[User]:
 
-    query = f"SELECT * FROM user WHERE name = '{username}';"
+    query = f"SELECT * FROM user WHERE username = '{username}';"
 
     c = conn.cursor()
 
@@ -106,7 +106,7 @@ def get_by_email(email: str) -> Optional[User]:
 
 def get_by_username_email(username: str, email: str) -> Optional[User]:
 
-    query = f"SELECT * FROM user WHERE name = '{username}' AND email = '{email}';"
+    query = f"SELECT * FROM user WHERE username = '{username}' AND email = '{email}';"
 
     c = conn.cursor()
 

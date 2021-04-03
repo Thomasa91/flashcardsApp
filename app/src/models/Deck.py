@@ -7,6 +7,7 @@ class Deck:
         self.id = deck_id
         self.user_id = user_id
         self.name = name
+
         logger.debug(
             f"Deck with id {self.id}, user_id:{self.user_id}, name:{self.name} has been created")
 

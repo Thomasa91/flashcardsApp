@@ -76,7 +76,7 @@ def login():
 
         username = request.form['username']
         password = request.form['password']
-        user = UsersRepository.get_by_name(username)
+        user = UsersRepository.get_by_username(username)
         logger.info(
             f"Handling '/login' route, login form is submitted. Form details username field: {username}")
 
@@ -84,7 +84,7 @@ def login():
         if not user:
             logger.error(
                 f"Handling '/login' route, authenticating user {username} failed: Invalid username")
-            return "invalid username"
+            return render_template("forms/login.html")
         if not user.password == crypto.hash_password(password):
             logger.error(
                 f"Handling '/login' route, authenticating user {username} failed: Invalid password")
