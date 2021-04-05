@@ -7,17 +7,16 @@
     <title>FlashCards App</title>
 </head>
 <body>
-    {% if user %}
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('decks') }}">Decks</a>
-        <br>
-        <p>Hello {{ user.username }}</p>
-    {% else %}
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('register') }}">Register</a>
-        <br>
-    {% endif %}
+    {% block nav %}
+        {% if is_authenticated()  %}
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('decks') }}">Decks</a>            
+        {% else %}
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+    {% endblock %}
     {% block body %}
     {% endblock %}
 </body>

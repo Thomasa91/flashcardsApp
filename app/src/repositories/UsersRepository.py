@@ -9,10 +9,10 @@ from app.src.utilities.logger import logger
 conn = dbConn.get()
 
 
-def create(name: str, email: str, password: str, birthday: str) -> Optional[User]:
+def create(username: str, email: str, password: str, birthday: str) -> Optional[User]:
 
     query = f"""INSERT INTO user (username, email, password, birthday) 
-            VALUES ('{name}', '{email}', '{password}', '{birthday}');"""
+            VALUES ('{username}', '{email}', '{password}', '{birthday}');"""
 
     c = conn.cursor()
 
@@ -24,10 +24,11 @@ def create(name: str, email: str, password: str, birthday: str) -> Optional[User
 
     if user_id:
 
-        logger.debug(f"User with id:{user_id} name:{name} has been created")
-        return User(user_id, email, password, birthday)
+        logger.debug(
+            f"User with id:{user_id} username:{username} has been created")
+        return get_by_id(user_id)
 
-    logger.error(f"Saving user {name} into database failed")
+    logger.error(f"Saving user {username} into database failed")
     return None
 
 
@@ -51,7 +52,7 @@ def get_all() -> List[User]:
 
 def get_by_id(user_id: int) -> Optional[User]:
 
-    query = f"SELECT * FROM user WHERE id = '{user_id}';"
+    query = f"SELECT * FROM user WHERE user_id = '{user_id}';"
 
     c = conn.cursor()
 

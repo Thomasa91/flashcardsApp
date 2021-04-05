@@ -1,9 +1,12 @@
 {% extends "index.html" %}
-
 {% block body %}
-    
-    {% for deck in decks %}
-        <p>{{ deck.id }}  {{ deck.name }}</p><a href="/deck/{{ deck.id }}">View cards</a>
-    {% endfor %}
-
+    {% if decks|length == 0 %}
+        <h2>You don't have any decks.</h2>
+        <a href="{{ url_for('create_deck') }}">Create new deck</a>
+    {% else %}
+        <a href="{{ url_for('create_deck') }}">Create new deck</a>
+        {% for deck in decks %}
+            <p>{{ deck.deck_id }}  {{ deck.name }}</p><a href="/deck/{{ deck.deck_id }}">View cards</a>    
+        {% endfor %}
+    {% endif %}
 {% endblock body %}

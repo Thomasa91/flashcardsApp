@@ -3,7 +3,6 @@ from flask import url_for, redirect, render_template, request, session
 from app import app
 import json
 
-# import repositories
 from app.src.repositories import UsersRepository
 from app.src.repositories import DecksRepository
 from app.src.repositories import CardsRepository
@@ -11,17 +10,19 @@ from app.src.repositories import CardsRepository
 from app.src.utilities.logger import logger
 
 from app.src.utilities.decorators import login_required
+from app.src.utilities import logginManager
+
 
 @app.route("/")
 def home():
 
     logger.info("Handling '/' route")
 
-    if "user" in session:
-        user = json.loads(session["user"])
+    if logginManager.is_authenticated():
+        user = logginManager.get_username()
 
         logger.info(
-            f"Handling '/' route, User {user['username']} is authenticated")
+            f"Handling '/' route, User {user} is authenticated")
         logger.info("Handling '/' route, rendering index.html")
 
         return render_template("index.html", user=user)
@@ -31,15 +32,17 @@ def home():
 
     return render_template("index.html")
 
+
 @app.route("/decks")
 @login_required
 def decks():
 
     logger.info("Handling '/decks' route")
-    decks = DecksRepository.get_all()
+    user_id = logginManager.get_id()
+
+    decks = DecksRepository.get_by_user_id(user_id)
 
     logger.info("Handling '/decks' route, rendering show_decks.html")
-
     return render_template("show_decks.html", decks=decks)
 
 
@@ -81,26 +84,15 @@ def create_deck():
 
     logger.info("Handling '/create_deck' route")
 
-    if 'user' not in session:
-        logger.info("Handling '/create_deck, user is not authenticated")
-        logger.info("Handling '/create_deck, redirecting to route '/login'")
-        return redirect(url_for("login"))
-
-    username = json.loads(session['user'])['username']
-    logger.info(
-        f"Handling '/create_deck, user {username} is authenticated")
-
     if request.method == "POST":
 
         name = request.form['name']
         logger.info(
             f"Handling '/create_deck, create_deck form is submitted. Form details deck_name:{name}")
 
-        user_id = json.loads(session['user'])['id']
+        user_id = logginManager.get_id()
 
-        deck = DecksRepository.create(user_id, name)
-
-        if deck:
+        if DecksRepository.create(user_id, name):
             logger.info(
                 "Handling '/create_deck, deck is created")
             logger.info("Handling '/create_deck, rendering create_deck.html")
@@ -120,16 +112,6 @@ def create_deck():
 def create_card(deck_id: int):
     logger.info(
         f"Handling '/deck/{deck_id}/create_card' route")
-
-    if 'user' not in session:
-        logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, user is not authenticated")
-        logger.info(
-            f"Handling '/deck/{deck_id}/create_card' route, redirecting to route '/login'")
-        return redirect(url_for("login"))
-
-    logger.info(
-        f"Handling '/deck/{deck_id}/create_card' route, user is authenticated")
 
     if request.method == "POST":
 
@@ -155,5 +137,5 @@ def create_card(deck_id: int):
         return "<h2>New card has been created</h2>"
 
     logger.info(
-        f"Handling '/deck/{deck_id}/create_card' route, user is authenticated, rendering create_card.html")
+        f"Handling '/deck/{deck_id}/create_card' route, rendering create_card.html")
     return render_template("create_card.html")

@@ -1,4 +1,4 @@
-from flask import render_template, request, session, redirect, url_for
+from flask import render_template, request, redirect, url_for
 from app import app
 
 from app.src.utilities import crypto
@@ -6,19 +6,17 @@ from app import register_validation as validation
 from app.src.repositories import UsersRepository
 
 from app.src.utilities.logger import logger
-
+from app.src.utilities import logginManager
 
 # TODO add  generic error messages
+
+
 @app.route("/register", methods=["POST", "GET"])
 def register():
 
     logger.info("Handling '/register' route")
-    if "user" in session:
-        logger.info("Handling '/register' route, user is authenticated")
-        logger.info("Handling '/register' route, redirecting to route 'home'")
-        return redirect(url_for("home"))
 
-    elif request.method == "POST":
+    if request.method == "POST":
 
         username = request.form['username']
         email = request.form['email']
@@ -57,17 +55,16 @@ def register():
             f"Handling '/register' route, registering new user {username} is finished successfully")
         return "success"
 
-    else:
-        logger.info(
-            "Handling '/register' route, user is not authenticated and from not submitted, rendering register.html")
-        return render_template("forms/register.html")
+    logger.info(
+        "Handling '/register' route, user is not authenticated and from not submitted, rendering register.html")
+    return render_template("forms/register.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
 
     logger.info("Handling '/login' route")
-    if "user" in session:
+    if logginManager.is_authenticated():
         logger.info(
             "Handling '/login' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
@@ -90,7 +87,7 @@ def login():
                 f"Handling '/login' route, authenticating user {username} failed: Invalid password")
             return "invalid password"
 
-        session["user"] = user.to_json()
+        logginManager.login_user(user)
         logger.info(
             f"Handling '/login' route, authenticating user {username} finished successfully")
         logger.info(
@@ -100,3 +97,4 @@ def login():
     logger.info(
         "Handling '/login' route, user is not authenticated, rendering login.html")
     return render_template("forms/login.html")
+

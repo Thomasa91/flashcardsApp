@@ -9,34 +9,27 @@ from app.src.utilities.logger import logger
 
 conn = dbConn.get()
 
-#TODO implement exception handling 
+#TODO implement exception handling
+
+
 def create(deck_id: int, word: str, translation: str) -> Optional[Card]:
 
     query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"
 
     c = conn.cursor()
 
-
-    try:
-        c.execute(query)
-        conn.commit()
-
-    except Error as err:
-        logger.error("Saving card into database failed", exc_info=True)
-        return None        
+    c.execute(query)
+    conn.commit()
 
     card_id = c.lastrowid
-    
 
-    
-    # if card_id:
-    #     logger.debug(
-    #         f"Card with id {card_id} has been saved into database successfully")
-    #     return Card(card_id, deck_id, word, translation)
+    if card_id:
+        logger.debug(
+            f"Card with id {card_id} has been saved into database successfully")
+        return get_by_id(card_id)
 
-
-    # logger.error("Saving card into database failed")
-    # return None
+    logger.error("Saving card into database failed")
+    return None
 
 
 def get_all() -> List[Card]:
@@ -69,7 +62,8 @@ def get_by_deck_id(deck_id: int) -> List[Card]:
     for card_data in c.fetchall():
         cards.append(Card(*card_data))
 
-    logger.debug(f"Retrieved {len(cards)} cards with deck_id:{deck_id} from database")
+    logger.debug(
+        f"Retrieved {len(cards)} cards with deck_id:{deck_id} from database")
     return cards
 
 
