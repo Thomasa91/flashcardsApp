@@ -10,7 +10,7 @@ class Card:
         self.translation = translation
         self.created_at = created_at
         self.updated_at = updated_at
-        
+
         logger.debug(
             f"Card with id:{self.card_id}, deck_id:{self.deck_id}, word:{self.word}, translation{self.translation} has been created")
 

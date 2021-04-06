@@ -16,6 +16,11 @@ def register():
 
     logger.info("Handling '/register' route")
 
+    if logginManager.is_authenticated():
+        logger.info(
+            "Handling '/register' route,  user is authenticated, redirecting to route '/home'")
+        return redirect(url_for("home"))
+
     if request.method == "POST":
 
         username = request.form['username']
@@ -81,7 +86,7 @@ def login():
         if not user:
             logger.error(
                 f"Handling '/login' route, authenticating user {username} failed: Invalid username")
-            return render_template("forms/login.html")
+            return "invalid username"
         if not user.password == crypto.hash_password(password):
             logger.error(
                 f"Handling '/login' route, authenticating user {username} failed: Invalid password")
@@ -97,4 +102,3 @@ def login():
     logger.info(
         "Handling '/login' route, user is not authenticated, rendering login.html")
     return render_template("forms/login.html")
-
