@@ -10,7 +10,7 @@ from app.src.repositories import CardsRepository
 from app.src.utilities.logger import logger
 
 from app.src.utilities.decorators import login_required
-from app.src.utilities import logginManager
+from app.src.utilities import loginManager
 
 
 @app.route("/")
@@ -18,8 +18,8 @@ def home():
 
     logger.info("Handling '/' route")
 
-    if logginManager.is_authenticated():
-        user = logginManager.get_username()
+    if loginManager.is_authenticated():
+        user = loginManager.get_username()
 
         logger.info(
             f"Handling '/' route, User {user} is authenticated")
@@ -38,7 +38,7 @@ def home():
 def decks():
 
     logger.info("Handling '/decks' route")
-    user_id = logginManager.get_id()
+    user_id = loginManager.get_id()
 
     decks = DecksRepository.get_by_user_id(user_id)
 
@@ -90,7 +90,7 @@ def create_deck():
         logger.info(
             f"Handling '/create_deck, create_deck form is submitted. Form details deck_name:{name}")
 
-        user_id = logginManager.get_id()
+        user_id = loginManager.get_id()
 
         if DecksRepository.create(user_id, name):
             logger.info(

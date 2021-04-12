@@ -10,6 +10,8 @@ from app.src.utilities.logger import logger
 conn = dbConn.get()
 
 #TODO implement exception handling
+
+
 def create(deck_id: int, word: str, translation: str) -> Optional[Card]:
 
     query = f"INSERT INTO card (deck_id, word, translation) VALUES ({deck_id}, '{word}', '{translation}');"
@@ -24,7 +26,7 @@ def create(deck_id: int, word: str, translation: str) -> Optional[Card]:
     if card_id:
         logger.debug(
             f"Card with id {card_id} has been saved into database successfully")
-        return get_by_id(card_id)
+        return Card(card_id, deck_id, word, translation)
 
     logger.error("Saving card into database failed")
     return None
@@ -41,7 +43,7 @@ def get_all() -> List[Card]:
     cards = []
 
     for data in c.fetchall():
-        cards.append(Card(*data))
+        cards.append(Card(*data[:-2]))
 
     logger.debug(f"Retrieved {len(cards)} card records from database")
     return cards
@@ -58,7 +60,7 @@ def get_by_deck_id(deck_id: int) -> List[Card]:
     cards = []
 
     for card_data in c.fetchall():
-        cards.append(Card(*card_data))
+        cards.append(Card(*card_data[:-2]))
 
     logger.debug(
         f"Retrieved {len(cards)} cards with deck_id:{deck_id} from database")
@@ -77,7 +79,7 @@ def get_by_id(card_id: int) -> Optional[Card]:
 
     if card_details:
         logger.debug(f"Card with id:{card_id} found in database")
-        return Card(*card_details)
+        return Card(*card_details[:-2])
 
     logger.debug(f"Card with id:{card_id} not found in database")
     return None

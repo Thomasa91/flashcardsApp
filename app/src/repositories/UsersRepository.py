@@ -26,7 +26,7 @@ def create(username: str, email: str, password: str, birthday: str) -> Optional[
 
         logger.debug(
             f"User with id:{user_id} username:{username} has been created")
-        return get_by_id(user_id)
+        return User(user_id, username, email, password, birthday)
 
     logger.error(f"Saving user {username} into database failed")
     return None
@@ -44,7 +44,7 @@ def get_all() -> List[User]:
 
     for user_data in c.fetchall():
 
-        users.append(User(*user_data))
+        users.append(User(*user_data[:-2]))
 
     logger.debug(f"Retrieved {len(users)} user records from database")
     return users
@@ -63,7 +63,7 @@ def get_by_id(user_id: int) -> Optional[User]:
     if user_details:
 
         logger.debug(f"User with id:{user_id} found in database")
-        return User(*user_details)
+        return User(*user_details[:-2])
 
     logger.debug(f"User with id:{user_id} not found in database")
     return None
@@ -81,7 +81,7 @@ def get_by_username(username: str) -> Optional[User]:
 
     if user_details:
         logger.debug(f"User with username:{username} found in database")
-        return User(*user_details)
+        return User(*user_details[:-2])
 
     logger.debug(f"User with username:{username} not found in database")
     return None
@@ -99,7 +99,7 @@ def get_by_email(email: str) -> Optional[User]:
 
     if user_details:
         logger.debug(f"User with email:{email} found in database")
-        return User(*user_details)
+        return User(*user_details[:-2])
 
     logger.debug(f"User with id:{email} not found in database")
     return None
@@ -118,7 +118,7 @@ def get_by_username_email(username: str, email: str) -> Optional[User]:
     if user_details:
         logger.debug(
             f"User with username:{username} and email:{email}found in database")
-        return User(*user_details)
+        return User(*user_details[:-2])
 
     logger.debug(
         f"User with username:{username} and email:{email} not found in database")

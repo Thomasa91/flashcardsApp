@@ -6,7 +6,7 @@ from app import register_validation as validation
 from app.src.repositories import UsersRepository
 
 from app.src.utilities.logger import logger
-from app.src.utilities import logginManager
+from app.src.utilities import loginManager
 
 # TODO add  generic error messages
 
@@ -16,7 +16,7 @@ def register():
 
     logger.info("Handling '/register' route")
 
-    if logginManager.is_authenticated():
+    if loginManager.is_authenticated():
         logger.info(
             "Handling '/register' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
@@ -61,7 +61,7 @@ def register():
         return "success"
 
     logger.info(
-        "Handling '/register' route, user is not authenticated and from not submitted, rendering register.html")
+        "Handling '/register' route, user is not authenticated and form is not submitted, rendering register.html")
     return render_template("forms/register.html")
 
 
@@ -69,7 +69,7 @@ def register():
 def login():
 
     logger.info("Handling '/login' route")
-    if logginManager.is_authenticated():
+    if loginManager.is_authenticated():
         logger.info(
             "Handling '/login' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
@@ -92,7 +92,7 @@ def login():
                 f"Handling '/login' route, authenticating user {username} failed: Invalid password")
             return "invalid password"
 
-        logginManager.login_user(user)
+        loginManager.authenticate(user)
         logger.info(
             f"Handling '/login' route, authenticating user {username} finished successfully")
         logger.info(

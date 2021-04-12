@@ -4,14 +4,12 @@ import json
 
 class User:
 
-    def __init__(self, user_id: int, username: str, email: str, password: str, birthday: str, created_at: str, updated_at: str):
+    def __init__(self, user_id: int, username: str, email: str, password: str, birthday: str):
         self.user_id = user_id
         self.username = username
         self.email = email
         self.password = password
         self.birthday = birthday
-        self.created_at = created_at
-        self.updated_at = updated_at
 
         logger.debug(
             f"User with id:{self.user_id}, username:{self.username} has been created")
