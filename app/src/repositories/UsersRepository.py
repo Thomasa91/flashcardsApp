@@ -44,7 +44,7 @@ def get_all() -> List[User]:
 
     for user_data in c.fetchall():
 
-        users.append(User(*user_data[:-2]))
+        users.append(User.create_from_database_data(user_data))
 
     logger.debug(f"Retrieved {len(users)} user records from database")
     return users
@@ -58,12 +58,12 @@ def get_by_id(user_id: int) -> Optional[User]:
 
     c.execute(query)
 
-    user_details = c.fetchone()
+    user_data = c.fetchone()
 
-    if user_details:
+    if user_data:
 
         logger.debug(f"User with id:{user_id} found in database")
-        return User(*user_details[:-2])
+        return User.create_from_database_data(user_data)
 
     logger.debug(f"User with id:{user_id} not found in database")
     return None
@@ -77,11 +77,11 @@ def get_by_username(username: str) -> Optional[User]:
 
     c.execute(query)
 
-    user_details = c.fetchone()
+    user_data = c.fetchone()
 
-    if user_details:
+    if user_data:
         logger.debug(f"User with username:{username} found in database")
-        return User(*user_details[:-2])
+        return User.create_from_database_data(user_data)
 
     logger.debug(f"User with username:{username} not found in database")
     return None
@@ -95,11 +95,11 @@ def get_by_email(email: str) -> Optional[User]:
 
     c.execute(query)
 
-    user_details = c.fetchone()
+    user_data = c.fetchone()
 
-    if user_details:
+    if user_data:
         logger.debug(f"User with email:{email} found in database")
-        return User(*user_details[:-2])
+        return User.create_from_database_data(user_data)
 
     logger.debug(f"User with id:{email} not found in database")
     return None
@@ -113,12 +113,12 @@ def get_by_username_email(username: str, email: str) -> Optional[User]:
 
     c.execute(query)
 
-    user_details = c.fetchone()
+    user_data = c.fetchone()
 
-    if user_details:
+    if user_data:
         logger.debug(
             f"User with username:{username} and email:{email}found in database")
-        return User(*user_details[:-2])
+        return User.create_from_database_data(user_data)
 
     logger.debug(
         f"User with username:{username} and email:{email} not found in database")

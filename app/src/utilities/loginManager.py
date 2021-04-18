@@ -1,14 +1,31 @@
-from typing import Dict
+from logging import log
+from sqlite3.dbapi2 import Cursor
+from typing import Dict, Optional
 from flask import session
 
+
+from app.src.utilities.logger import logger
 from app.src.models.User import User
+from app.src.repositories import UsersRepository
 from app.src.utilities.decorators import template_function
+
+from app.src.utilities.crypto import hash_password
 
 import json
 
-# TODO change this module
-def authenticate(user: User) -> None:
-    session['user'] = user.to_json()
+
+def authenticate(username, password) -> bool:
+    user = UsersRepository.get_by_username(username)
+
+    if user:
+        if user.password == hash_password(password):
+            logger.debug("User is authenticated and logged into session")
+            session['user'] = user.to_json()
+            return True
+    
+    logger.error("User is not authenticated")
+    return False
+
 
 
 @template_function

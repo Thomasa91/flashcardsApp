@@ -14,6 +14,10 @@ class User:
         logger.debug(
             f"User with id:{self.user_id}, username:{self.username} has been created")
 
+    @classmethod
+    def create_from_database_data(cls, data):
+        return cls(*data[:-2])
+
     def __del__(self):
         logger.debug(
             f"User with id:{self.user_id}, username:{self.username} has been destroyed")

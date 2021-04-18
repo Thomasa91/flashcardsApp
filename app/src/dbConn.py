@@ -5,9 +5,15 @@ import time
 from app.config import app_config
 
 
+INITIAL_SLEEP_TIME = 2
+MAX_SLEEP_TIME = 30
+SLEEP_INTERVAL = 2
+SLEEP_INCREASE_VALUE = 2
+
+
 def connect():
 
-    timer = 2
+    time_until_reconnect = INITIAL_SLEEP_TIME
 
     while(True):
         try:
@@ -22,15 +28,12 @@ def connect():
         except Error as e:
             logger.critical("Connection to database failed", exc_info=True)
 
-            seconds = timer
-
-            while(seconds):
+            for seconds in range(time_until_reconnect, 0, -SLEEP_INTERVAL):
                 logger.info(f"Reconnecting in {seconds} seconds")
-                time.sleep(2)
-                seconds -= 2
+                time.sleep(SLEEP_INTERVAL)
 
-        if timer < 30:
-            timer += 2
+        if time_until_reconnect < MAX_SLEEP_TIME:
+            time_until_reconnect += SLEEP_INCREASE_VALUE
 
 
 conn = connect()

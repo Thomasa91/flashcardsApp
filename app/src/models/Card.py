@@ -12,6 +12,10 @@ class Card:
         logger.debug(
             f"Card with id:{self.card_id}, deck_id:{self.deck_id}, word:{self.word}, translation{self.translation} has been created")
 
+    @classmethod
+    def create_from_database_data(cls, data):
+        return cls(*data[:-2])
+
     def __del__(self):
         logger.debug(
             f"Card with id:{self.card_id}, deck_id:{self.deck_id}, word:{self.word}, translation{self.translation} has been destroyed")
