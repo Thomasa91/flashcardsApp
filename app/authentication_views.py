@@ -1,5 +1,5 @@
-from flask import render_template, request, session, redirect, url_for
-from app import app
+from flask import render_template, request, redirect, url_for
+from app import app, loginManager
 
 from app.src.utilities import crypto
 from app import register_validation as validation
@@ -9,21 +9,25 @@ from app.src.utilities.logger import logger
 
 
 # TODO add  generic error messages
+
+
 @app.route("/register", methods=["POST", "GET"])
 def register():
 
     logger.info("Handling '/register' route")
-    if "user" in session:
-        logger.info("Handling '/register' route, user is authenticated")
-        logger.info("Handling '/register' route, redirecting to route 'home'")
+
+    if loginManager.is_authenticated():
+        logger.info(
+            "Handling '/register' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
 
-    elif request.method == "POST":
+    if request.method == "POST":
 
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         birthday = request.form['birthday']
+
 
         logger.info(
             f"Handling '/register' route, register form is submitted. Form details username: {username}, birthday: {birthday}")
@@ -57,17 +61,16 @@ def register():
             f"Handling '/register' route, registering new user {username} is finished successfully")
         return "success"
 
-    else:
-        logger.info(
-            "Handling '/register' route, user is not authenticated and from not submitted, rendering register.html")
-        return render_template("forms/register.html")
+    logger.info(
+        "Handling '/register' route, user is not authenticated and form is not submitted, rendering register.html")
+    return render_template("forms/register.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
 
     logger.info("Handling '/login' route")
-    if "user" in session:
+    if loginManager.is_authenticated():
         logger.info(
             "Handling '/login' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
@@ -76,27 +79,21 @@ def login():
 
         username = request.form['username']
         password = request.form['password']
-        user = UsersRepository.get_by_name(username)
+        
         logger.info(
             f"Handling '/login' route, login form is submitted. Form details username field: {username}")
+        
+        # TODO Find a way to show user if password or username was invalid
+        if not loginManager.authenticate(username, password):
+            logger.error(f"Handling '/login' route, authenticating user {username} failed")
+            return "invalid username or password"
 
-        # TODO change responses
-        if not user:
-            logger.error(
-                f"Handling '/login' route, authenticating user {username} failed: Invalid username")
-            return "invalid username"
-        if not user.password == crypto.hash_password(password):
-            logger.error(
-                f"Handling '/login' route, authenticating user {username} failed: Invalid password")
-            return "invalid password"
-
-        session["user"] = user.to_json()
-        logger.info(
-            f"Handling '/login' route, authenticating user {username} finished successfully")
+        logger.info("Handling '/login' route, authenticating user {username} finished successfully")
         logger.info(
             "Handling '/login' route, user is authenticated, redirecting to route 'home'")
         return redirect(url_for("home"))
 
+        
     logger.info(
         "Handling '/login' route, user is not authenticated, rendering login.html")
     return render_template("forms/login.html")

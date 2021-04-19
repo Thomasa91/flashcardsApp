@@ -1,4 +1,4 @@
-def is_leap_year(year) -> bool:
+def is_leap_year(year: int) -> bool:
 
     if year % 4 == 0:
         if year % 100 != 0:
