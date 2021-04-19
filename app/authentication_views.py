@@ -1,12 +1,12 @@
 from flask import render_template, request, redirect, url_for
-from app import app
+from app import app, loginManager
 
 from app.src.utilities import crypto
 from app import register_validation as validation
 from app.src.repositories import UsersRepository
 
 from app.src.utilities.logger import logger
-from app.src.utilities import loginManager
+
 
 # TODO add  generic error messages
 
@@ -82,7 +82,7 @@ def login():
         
         logger.info(
             f"Handling '/login' route, login form is submitted. Form details username field: {username}")
-
+        
         # TODO Find a way to show user if password or username was invalid
         if not loginManager.authenticate(username, password):
             logger.error(f"Handling '/login' route, authenticating user {username} failed")

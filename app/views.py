@@ -1,16 +1,13 @@
-from flask import url_for, redirect, render_template, request, session
+from flask import render_template, request
 
-from app import app
-import json
+from app import app, loginManager
 
-from app.src.repositories import UsersRepository
 from app.src.repositories import DecksRepository
 from app.src.repositories import CardsRepository
 
 from app.src.utilities.logger import logger
 
 from app.src.utilities.decorators import login_required
-from app.src.utilities import loginManager
 
 
 @app.route("/")

@@ -1,11 +1,8 @@
-from logging import log
-from sqlite3.dbapi2 import Cursor
-from typing import Dict, Optional
+from typing import Dict
 from flask import session
 
 
 from app.src.utilities.logger import logger
-from app.src.models.User import User
 from app.src.repositories import UsersRepository
 from app.src.utilities.decorators import template_function
 

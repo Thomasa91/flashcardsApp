@@ -1,4 +1,5 @@
 from app.src.utilities.logger import logger
+from typing import List
 import json
 
 
@@ -15,7 +16,7 @@ class User:
             f"User with id:{self.user_id}, username:{self.username} has been created")
 
     @classmethod
-    def create_from_database_data(cls, data):
+    def create_from_array(cls, data: List):
         return cls(*data[:-2])
 
     def __del__(self):
