@@ -1,5 +1,5 @@
 from app.src.utilities.logger import logger
-from typing import List
+from typing import List, Any
 
 class Card:
 
@@ -13,7 +13,7 @@ class Card:
             f"Card with id:{self.card_id}, deck_id:{self.deck_id}, word:{self.word}, translation{self.translation} has been created")
 
     @classmethod
-    def create_from_array(cls, data: List):
+    def create_from_list(cls, data: List[Any]):
         return cls(*data[:-2])
 
     def __del__(self):
