@@ -31,7 +31,8 @@ def register():
             f"Handling '/register' route, register form is submitted. Form details username: {form.username.data}, birthday: {form.birthday.data}")
 
         if not UsersRepository.create(form.username.data, form.email.data, crypto.hash_password(form.password.data), form.birthday.data.strftime("%Y-%m-%d")):
-            return "User has been not created"
+            logger.error("User hasn't been created")
+            return "User hasn't been created"
 
         logger.info(
             f"Handling '/register' route, registering new user {form.username.data} is finished successfully")
@@ -69,7 +70,6 @@ def login():
             "Handling '/login' route, user is authenticated, redirecting to route 'home'")
         return redirect(url_for("home"))
 
-        logger.d
     logger.info(
         "Handling '/login' route, user is not authenticated, rendering login.html")
     return render_template("forms/login.html")

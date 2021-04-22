@@ -3,3 +3,4 @@ app/database.db
 .idea
 **/__pycache__
 app/logs
+.vscode
