@@ -1,5 +1,5 @@
 from typing import Optional, List
-
+from sqlite3 import Error
 from app.src import dbConn
 from app.src.models.User import User
 
@@ -16,10 +16,14 @@ def create(username: str, email: str, password: str, birthday: str) -> Optional[
 
     c = conn.cursor()
 
-    c.execute(query)
+    try:
+        c.execute(query)
+    except Error as error:
+        logger.debug("User hast not been saved", exc_info=True)
+        return None
 
     conn.commit()
-
+    
     user_id = c.lastrowid
 
     if user_id:

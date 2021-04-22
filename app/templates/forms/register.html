@@ -1,4 +1,4 @@
-<form action="" method="POST">
+<!-- <form action="" method="POST">
     <label for="username">Username</label>
     <input type="text" name="username">
 
@@ -12,4 +12,16 @@
     <input type="date" name="birthday">
 
     <button type="submit">Register</button>
+</form> -->
+
+
+{% from "forms/_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.username) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.password) }}
+    {{ render_field(form.birthday) }}
+  </dl>
+  <p><input type=submit value=Register>
 </form>
