@@ -1,15 +1,10 @@
-<form action="" method="POST">
-    <label for="username">Username</label>
-    <input type="text" name="username">
-
-    <label for="email">Email</label>
-    <input type="email" name="email">
-
-    <label for="password">Password</label>
-    <input type="password" name="password">
-    
-    <label for="birthday">Day of the birth</label>
-    <input type="date" name="birthday">
-
-    <button type="submit">Register</button>
+{% from "forms/_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.username) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.password) }}
+    {{ render_field(form.birthday) }}
+  </dl>
+  <p><input type=submit value=Register>
 </form>

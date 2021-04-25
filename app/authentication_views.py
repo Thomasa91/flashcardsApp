@@ -2,11 +2,11 @@ from flask import render_template, request, redirect, url_for
 from app import app, loginManager
 
 from app.src.utilities import crypto
-from app import register_validation as validation
 from app.src.repositories import UsersRepository
 
 from app.src.utilities.logger import logger
 
+from app.src.forms.RegistrationForm import RegistrationForm
 
 # TODO add  generic error messages
 
@@ -21,49 +21,25 @@ def register():
             "Handling '/register' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
 
-    if request.method == "POST":
 
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        birthday = request.form['birthday']
-
+    form = RegistrationForm(request.form)
+    # TODO find a way to give information to user that email is already used.
+    if request.method == "POST" and form.validate():
 
         logger.info(
-            f"Handling '/register' route, register form is submitted. Form details username: {username}, birthday: {birthday}")
+            f"Handling '/register' route, register form is submitted. Form details username: {form.username.data}, birthday: {form.birthday.data}")
 
-        if not validation.validate_date_format(birthday):
-            logger.error(
-                f"Handling '/register' route, registering new user {username} failed: invalid date format")
-            return "wrong date format"
-
-        # TODO tell if email or username is taken
-        if UsersRepository.get_by_username_email(username, email):
-            logger.error(
-                f"Handling '/register' route, registering new user {username} failed: User already exits")
-            return "User already exits"
-
-        # TODO return more detailed information
-        if not validation.validate_password(password):
-            logger.error(
-                f"Handling '/register' route, registering new user {username} failed: invalid password")
-            return "at least 1 capital letter, 1 small letter, 1 number, length 8 - 20"
-
-        if not validation.validate_email(email):
-            logger.error(
-                f"Handling '/register' route, registering new user {username} failed: invalid email format")
-            return "wrong email format"
-
-        if not UsersRepository.create(username, email, crypto.hash_password(password), birthday):
-            return "User has been not created"
+        if not UsersRepository.create(form.username.data, form.email.data, crypto.hash_password(form.password.data), form.birthday.data.strftime("%Y-%m-%d")):
+            logger.error("User has not been created")
+            return "User has not been created"
 
         logger.info(
-            f"Handling '/register' route, registering new user {username} is finished successfully")
+            f"Handling '/register' route, registering new user {form.username.data} is finished successfully")
         return "success"
 
     logger.info(
         "Handling '/register' route, user is not authenticated and form is not submitted, rendering register.html")
-    return render_template("forms/register.html")
+    return render_template("forms/register.html", form=form)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -93,7 +69,6 @@ def login():
             "Handling '/login' route, user is authenticated, redirecting to route 'home'")
         return redirect(url_for("home"))
 
-        
     logger.info(
         "Handling '/login' route, user is not authenticated, rendering login.html")
     return render_template("forms/login.html")
