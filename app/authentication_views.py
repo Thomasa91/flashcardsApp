@@ -30,8 +30,8 @@ def register():
             f"Handling '/register' route, register form is submitted. Form details username: {form.username.data}, birthday: {form.birthday.data}")
 
         if not UsersRepository.create(form.username.data, form.email.data, crypto.hash_password(form.password.data), form.birthday.data.strftime("%Y-%m-%d")):
-            logger.error("User hasn't been created")
-            return "User hasn't been created"
+            logger.error("User has not been created")
+            return "User has not been created"
 
         logger.info(
             f"Handling '/register' route, registering new user {form.username.data} is finished successfully")
