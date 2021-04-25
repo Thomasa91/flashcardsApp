@@ -2,7 +2,6 @@ from flask import render_template, request, redirect, url_for
 from app import app, loginManager
 
 from app.src.utilities import crypto
-from app import register_validation as validation
 from app.src.repositories import UsersRepository
 
 from app.src.utilities.logger import logger

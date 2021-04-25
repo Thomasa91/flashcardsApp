@@ -40,7 +40,7 @@ def get_all() -> List[Deck]:
     decks = []
 
     for deck_data in c.fetchall():
-        decks.append(Deck.create_from_database_data(deck_data))
+        decks.append(Deck.create_from_list(deck_data))
 
     logger.debug(f"Retrieved {len(decks)} deck records from database")
     return decks
@@ -58,7 +58,7 @@ def get_by_id(deck_id: int) -> Optional[Deck]:
 
     if deck_data:
         logger.debug(f"Deck with id:{deck_id} found in database")
-        return Deck.create_from_database_data(deck_data)
+        return Deck.create_from_list(deck_data)
 
     logger.debug(f"User with id:{deck_id} not found in database")
     return None
@@ -75,7 +75,7 @@ def get_by_user_id(user_id: int) -> List[Deck]:
     decks = []
 
     for deck_data in c.fetchall():
-        decks.append(Deck.create_from_database_data(deck_data))
+        decks.append(Deck.create_from_list(deck_data))
 
     logger.debug(
         f"Retrieved {len(decks)} decks with user_id:{user_id} from database")

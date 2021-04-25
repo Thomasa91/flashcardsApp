@@ -43,7 +43,7 @@ def get_all() -> List[Card]:
     cards = []
 
     for card_data in c.fetchall():
-        cards.append(Card.create_from_database_data(card_data))
+        cards.append(Card.create_from_list(card_data))
 
     logger.debug(f"Retrieved {len(cards)} card records from database")
     return cards
@@ -60,7 +60,7 @@ def get_by_deck_id(deck_id: int) -> List[Card]:
     cards = []
 
     for card_data in c.fetchall():
-        cards.append(Card.create_from_database_data(card_data))
+        cards.append(Card.create_from_list(card_data))
 
     logger.debug(
         f"Retrieved {len(cards)} cards with deck_id:{deck_id} from database")
@@ -79,7 +79,7 @@ def get_by_id(card_id: int) -> Optional[Card]:
 
     if card_data:
         logger.debug(f"Card with id:{card_id} found in database")
-        return Card.create_from_database_data(card_data)
+        return Card.create_from_list(card_data)
 
     logger.debug(f"Card with id:{card_id} not found in database")
     return None
