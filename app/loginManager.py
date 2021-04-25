@@ -23,7 +23,11 @@ def authenticate(username, password) -> bool:
 
         logger.error("Authenticating a user, invalid password")
 
-    logger.error("Authenticating a user, username doesn't exists in database")
+    else:
+
+        logger.error(
+            "Authenticating a user, username doesn't exists in database")
+
     logger.error("Authenticating a user, user is not authenticated")
     return False
 
