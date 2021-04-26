@@ -1,10 +1,8 @@
-<form action="" method="POST">
-    
-    <label for="word">Enter a word</label>
-    <input name="word" type="text">
-
-    <label for="translation">Enter a translation</label>
-    <input name="translation" type="text">
-
-    <button type="submit">Add a card</button>
+{% from "forms/_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.word) }}
+    {{ render_field(form.translation) }}
+  </dl>
+  <p><input type=submit value=Create>
 </form>

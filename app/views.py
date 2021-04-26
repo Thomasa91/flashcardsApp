@@ -9,6 +9,9 @@ from app.src.utilities.logger import logger
 
 from app.src.utilities.decorators import login_required
 
+from app.src.forms.CardForm import CardForm
+from app.src.forms.DeckForm import DeckForm
+
 
 @app.route("/")
 def home():
@@ -81,9 +84,12 @@ def create_deck():
 
     logger.info("Handling '/create_deck' route")
 
-    if request.method == "POST":
+    form = DeckForm(request.form)
 
-        name = request.form['name']
+    if request.method == "POST" and form.validate():
+
+        name = form.name.data
+
         logger.info(
             f"Handling '/create_deck, create_deck form is submitted. Form details deck_name:{name}")
 
@@ -101,7 +107,7 @@ def create_deck():
         return render_template("create_deck.html", success=False)
 
     logger.info("Handling '/create_deck, rendering create_deck.html")
-    return render_template("create_deck.html")
+    return render_template("create_deck.html", form=form)
 
 
 @app.route("/deck/<int:deck_id>/create_card", methods=["GET", "POST"])
@@ -110,10 +116,12 @@ def create_card(deck_id: int):
     logger.info(
         f"Handling '/deck/{deck_id}/create_card' route")
 
-    if request.method == "POST":
+    form = CardForm(request.form)
 
-        word = request.form['word']
-        translation = request.form["translation"]
+    if request.method == "POST" and form.validate():
+
+        word = form.word.data
+        translation = form.translation.data
 
         logger.info(
             f"Handling '/deck/{deck_id}/create_card' route, create_card form is submitted. Form details word: {word}, translation: {translation}")
@@ -135,4 +143,4 @@ def create_card(deck_id: int):
 
     logger.info(
         f"Handling '/deck/{deck_id}/create_card' route, rendering create_card.html")
-    return render_template("create_card.html")
+    return render_template("create_card.html", form=form)

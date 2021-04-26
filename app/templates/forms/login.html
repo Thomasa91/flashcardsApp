@@ -1,9 +1,8 @@
-<form action="" method="POST">
-    <label for="username">Username</label>
-    <input type="text" name="username">
-
-    <label for="password">Password</label>
-    <input type="password" name="password">
-
-    <button type="submit">Log in</button>
+{% from "forms/_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.username) }}
+    {{ render_field(form.password) }}
+  </dl>
+  <p><input type=submit value=Log In>
 </form>
