@@ -14,11 +14,11 @@ def authenticate(username, password) -> bool:
     user = UsersRepository.get_by_username(username)
 
     if user:
-        logger.debug("Authenticating a user, username exists in database")
-        logger.debug("Authenticating a user, checking password")
+        logger.debug(f"Authenticating a user, username {username} exists")
+        logger.debug(f"Authenticating a user, username {username} checking password")
         if user.password == hash_password(password):
             session['user'] = user.to_json()
-            logger.debug("User is authenticated and logged into session")
+            logger.debug(f"User {username} is authenticated and session is created")
             return True
 
         logger.error("Authenticating a user, invalid password")
@@ -26,7 +26,7 @@ def authenticate(username, password) -> bool:
     else:
 
         logger.error(
-            "Authenticating a user, username doesn't exists in database")
+            "Authenticating a user, username does not exists")
 
     logger.error("Authenticating a user, user is not authenticated")
     return False
