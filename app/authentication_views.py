@@ -23,7 +23,7 @@ def register():
         return redirect(url_for("home"))
 
     form = RegistrationForm(request.form)
-    # TODO find a way to give information to user that email is already used.
+    
     if request.method == "POST" and form.validate():
 
         logger.info(
