@@ -1,5 +1,7 @@
-<form action="" method="POST">
-    <label for="name">Enter a name of the deck</label>
-    <input name="name" type="text" required>
-    <button type="submit">Create deck</button>
+{% from "forms/_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.name) }}
+  </dl>
+  <p><input type=submit value=Create>
 </form>

@@ -7,6 +7,7 @@ from app.src.repositories import UsersRepository
 from app.src.utilities.logger import logger
 
 from app.src.forms.RegistrationForm import RegistrationForm
+from app.src.forms.LoginForm import LoginForm
 
 # TODO add  generic error messages
 
@@ -21,9 +22,8 @@ def register():
             "Handling '/register' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
 
-
     form = RegistrationForm(request.form)
-    # TODO find a way to give information to user that email is already used.
+    
     if request.method == "POST" and form.validate():
 
         logger.info(
@@ -51,24 +51,28 @@ def login():
             "Handling '/login' route,  user is authenticated, redirecting to route '/home'")
         return redirect(url_for("home"))
 
-    if request.method == "POST":
+    form = LoginForm(request.form)
 
-        username = request.form['username']
-        password = request.form['password']
-        
+    if request.method == "POST" and form.validate():
+
+        username = form.username.data
+        password = form.password.data
+
         logger.info(
             f"Handling '/login' route, login form is submitted. Form details username field: {username}")
-        
-        # TODO Find a way to show user if password or username was invalid
-        if not loginManager.authenticate(username, password):
-            logger.error(f"Handling '/login' route, authenticating user {username} failed")
-            return "invalid username or password"
 
-        logger.info("Handling '/login' route, authenticating user {username} finished successfully")
-        logger.info(
-            "Handling '/login' route, user is authenticated, redirecting to route 'home'")
-        return redirect(url_for("home"))
+        if loginManager.authenticate(username, password):
 
+            logger.info(
+                "Handling '/login' route, authenticating user {username} finished successfully")
+            logger.info(
+                "Handling '/login' route, user is authenticated, redirecting to route 'home'")
+            return redirect(url_for("home"))
+
+        logger.error(
+            f"Handling '/login' route, authenticating user {username} failed")
+        form.password.errors.append("Username or password is invalid")
+    
     logger.info(
         "Handling '/login' route, user is not authenticated, rendering login.html")
-    return render_template("forms/login.html")
+    return render_template("forms/login.html", form=form)

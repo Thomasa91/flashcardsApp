@@ -1,7 +1,6 @@
 from typing import Dict
 from flask import session
 
-
 from app.src.utilities.logger import logger
 from app.src.repositories import UsersRepository
 from app.src.utilities.decorators import template_function
@@ -15,14 +14,21 @@ def authenticate(username, password) -> bool:
     user = UsersRepository.get_by_username(username)
 
     if user:
+        logger.debug(f"Authenticating a user, user with {username} exists, checking password")
         if user.password == hash_password(password):
-            logger.debug("User is authenticated and logged into session")
             session['user'] = user.to_json()
+            logger.debug(f"User {username} is authenticated and session is created")
             return True
-    
-    logger.error("User is not authenticated")
-    return False
 
+        logger.error("Authenticating a user, invalid password")
+
+    else:
+
+        logger.error(
+            "Authenticating a user, user with username does not exists")
+
+    logger.error("Authenticating a user, user is not authenticated")
+    return False
 
 
 @template_function
