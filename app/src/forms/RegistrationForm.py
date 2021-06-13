@@ -64,3 +64,4 @@ class RegistrationForm(Form):
         'Password', [validators.InputRequired(), password_validator(8, 64), ])
     birthday = DateField("Enter your birthday", [validators.InputRequired(),
                          birthday_validator, ], format='%Y-%m-%d')
+ 

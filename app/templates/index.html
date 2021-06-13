@@ -8,9 +8,11 @@
 </head>
 <body>
     {% block nav %}
-        {% if is_authenticated()  %}
+        {% if current_user.is_authenticated  %}
+            <p>Hello {{ current_user.username }}</p>
             <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('decks') }}">Decks</a>            
+            <a href="{{ url_for('decks') }}">Decks</a> 
+            <a href="{{ url_for('logout') }}">Logout</a>          
         {% else %}
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('login') }}">Login</a>
