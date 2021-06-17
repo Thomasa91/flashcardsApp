@@ -3,7 +3,6 @@ from typing import List, Any
 from flask_login import UserMixin
 import json
 
-
 class User(UserMixin):
 
     def __init__(self, user_id: int, username: str, email: str, password: str, birthday: str):
@@ -30,5 +29,6 @@ class User(UserMixin):
     def to_json(self) -> str:
         return json.dumps(self.__dict__)
 
-    def get_id(self):
-        return self.user_id
+    def get_id(self) -> str:
+        return str(self.user_id)
+

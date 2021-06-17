@@ -87,7 +87,7 @@ def login():
 @login_required
 @app.route("/logout")
 def logout():
-    name = current_user.username
+    logged_out_username = current_user.username
     logout_user()
-    logger.info(f"User {name} has been logged out")
+    logger.info(f"User {logged_out_username} has been logged out")
     return redirect(url_for("home"))
