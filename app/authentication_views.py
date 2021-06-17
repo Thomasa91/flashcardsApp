@@ -89,5 +89,5 @@ def login():
 def logout():
     name = current_user.username
     logout_user()
-    logger.info(f"User {name} has been logout from the session")
+    logger.info(f"User {name} has been logged out")
     return redirect(url_for("home"))
