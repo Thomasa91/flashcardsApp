@@ -1,25 +1,24 @@
 from flask import render_template, request
 
-from app import app, loginManager
+from app import app
 
 from app.src.repositories import DecksRepository
 from app.src.repositories import CardsRepository
 
 from app.src.utilities.logger import logger
 
-from app.src.utilities.decorators import login_required
-
 from app.src.forms.CardForm import CardForm
 from app.src.forms.DeckForm import DeckForm
 
+from flask_login import login_required, current_user
 
 @app.route("/")
 def home():
 
     logger.info("Handling '/' route")
 
-    if loginManager.is_authenticated():
-        user = loginManager.get_username()
+    if current_user.is_authenticated:
+        user = current_user.username
 
         logger.info(
             f"Handling '/' route, User {user} is authenticated")
@@ -38,7 +37,7 @@ def home():
 def decks():
 
     logger.info("Handling '/decks' route")
-    user_id = loginManager.get_id()
+    user_id = current_user.get_id()
 
     decks = DecksRepository.get_by_user_id(user_id)
 
@@ -93,7 +92,7 @@ def create_deck():
         logger.info(
             f"Handling '/create_deck, create_deck form is submitted. Form details deck_name:{name}")
 
-        user_id = loginManager.get_id()
+        user_id = current_user.get_id()
 
         if DecksRepository.create(user_id, name):
             logger.info(
