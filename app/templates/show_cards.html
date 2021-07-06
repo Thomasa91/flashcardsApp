@@ -5,6 +5,7 @@
     <p>You have {{ cards|length }} cards</p>
     {% for card in cards %}
         <p>{{ card.word }}</p>
-        <p><a id="details" href="/deck/{{ deck_id }}/card/{{ card.card_id }}">See detail</a></p>
+        <p><a href="/deck/{{ deck_id }}/card/{{ card.card_id }}">See detail</a></p>
+        <p><a href="{{ url_for('delete_card', deck_id = deck_id, card_id=card.card_id) }}" onClick="window.location.reload()">Delete</a></p>
     {% endfor %}
 {% endblock body %}

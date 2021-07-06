@@ -83,3 +83,19 @@ def get_by_id(card_id: int) -> Optional[Card]:
 
     logger.debug(f"Card with id:{card_id} not found in database")
     return None
+
+
+def delete(card_id : int) -> bool:
+    
+    query = f"DELETE FROM card WHERE card_id = {card_id};"
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    if c.rowcount:
+        logger.debug(f"Card with id {card_id} has been removed")        
+        return True
+
+    logger.debug(f"Deleting a card with id {card_id} has not finished successfully")
+    return False

@@ -1,4 +1,5 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, Response
+from flask.helpers import url_for
 
 from app import app
 
@@ -109,6 +110,21 @@ def create_deck():
     return render_template("create_deck.html", form=form)
 
 
+@app.route("/delete_deck/<int:deck_id>")
+@login_required
+def delete_deck(deck_id):
+
+    logger.info(f"Handling '/delete_deck/{deck_id}' route")
+
+    if DecksRepository.delete(deck_id):
+        logger.info(f"Handling '/delete_deck' route, Deck with id {deck_id} has been deleted")
+        
+    
+    logger.info(f"Handling '/delete_deck/{deck_id}' route, deck with id {deck_id} has not been deleted")
+
+    return redirect(url_for("decks"))
+
+
 @app.route("/deck/<int:deck_id>/create_card", methods=["GET", "POST"])
 @login_required
 def create_card(deck_id: int):
@@ -143,3 +159,16 @@ def create_card(deck_id: int):
     logger.info(
         f"Handling '/deck/{deck_id}/create_card' route, rendering create_card.html")
     return render_template("create_card.html", form=form)
+
+@app.route("/delete_card/<int:deck_id>/<int:card_id>")
+def delete_card(deck_id: int, card_id: int):
+    
+    logger.info(f"Handling delete_card/{card_id} route")
+    
+    if CardsRepository.delete(card_id):
+        logger.info(f"Handling delete_card/{card_id} route, card with id {card_id} has been deleted")
+    
+    logger.info(f"Handling delete_card/{card_id} route, deck with id {card_id} has not been deleted")
+
+    return redirect(url_for("display_cards", deck_id = deck_id))
+ 
