@@ -110,7 +110,7 @@ def create_deck():
     return render_template("create_deck.html", form=form)
 
 
-@app.route("/delete_deck/<int:deck_id>")
+@app.route("/deck/<int:deck_id>/delete")
 @login_required
 def delete_deck(deck_id):
 
@@ -159,7 +159,7 @@ def create_card(deck_id: int):
         f"Handling '/deck/{deck_id}/create_card' route, rendering create_card.html")
     return render_template("create_card.html", form=form)
 
-@app.route("/delete_card/<int:deck_id>/<int:card_id>")
+@app.route("/card/<int:deck_id>/<int:card_id>/delete")
 def delete_card(deck_id: int, card_id: int):
     
     logger.info(f"Handling delete_card/{card_id} route")
