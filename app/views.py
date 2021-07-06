@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, Response
+from flask import render_template, request, redirect
 from flask.helpers import url_for
 
 from app import app
@@ -118,8 +118,7 @@ def delete_deck(deck_id):
 
     if DecksRepository.delete(deck_id):
         logger.info(f"Handling '/delete_deck' route, Deck with id {deck_id} has been deleted")
-        
-    
+         
     logger.info(f"Handling '/delete_deck/{deck_id}' route, deck with id {deck_id} has not been deleted")
 
     return redirect(url_for("decks"))
