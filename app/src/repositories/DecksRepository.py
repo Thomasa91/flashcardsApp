@@ -80,3 +80,18 @@ def get_by_user_id(user_id: int) -> List[Deck]:
     logger.debug(
         f"Retrieved {len(decks)} decks with user_id:{user_id} from database")
     return decks
+
+def delete(deck_id) -> bool:
+
+    query = f"DELETE FROM deck WHERE deck_id = {deck_id}"
+
+    c = conn.cursor()
+
+    c.execute(query)
+
+    if c.rowcount:
+        logger.debug(f"Deck with id {deck_id} has been removed")
+        return True
+    
+    logger.debug(f"Deleting a deck with id {deck_id} has not finished successfully")
+    return False

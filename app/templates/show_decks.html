@@ -6,7 +6,8 @@
     {% else %}
         <a href="{{ url_for('create_deck') }}">Create new deck</a>
         {% for deck in decks %}
-            <p>{{ deck.deck_id }}  {{ deck.name }}</p><a href="/deck/{{ deck.deck_id }}">View cards</a>    
+            <p>{{ deck.deck_id }}  {{ deck.name }}</p><a href="{{ url_for('display_cards', deck_id=deck.deck_id) }}">View cards</a>
+            <a href="{{ url_for('delete_deck', deck_id=deck.deck_id) }}">Delete deck</a> 
         {% endfor %}
     {% endif %}
 {% endblock body %}
