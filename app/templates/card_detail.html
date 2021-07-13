@@ -6,4 +6,5 @@
 <h3>Translation</h3>
 {{ card.translation }}
 
+<a href="{{ url_for('edit_card', deck_id=card.deck_id, card_id=card.card_id) }}">Edit card</a>
 {% endblock body %}

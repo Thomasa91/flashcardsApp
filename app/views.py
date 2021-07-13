@@ -166,7 +166,39 @@ def delete_card(deck_id: int, card_id: int):
     
     if CardsRepository.delete(card_id):
         logger.info(f"Handling /decks/{deck_id}/cards/{card_id}/delete route, card with id {card_id} has been deleted")
-    
-    logger.info(f"Handling /decks/{deck_id}/cards/{card_id}/delete, deck with id {card_id} has not been deleted")
+    else:
+        logger.info(f"Handling /decks/{deck_id}/cards/{card_id}/delete, deck with id {card_id} has not been deleted")
 
     return redirect(url_for("display_cards", deck_id = deck_id))
+
+
+@app.route("/decks/<int:deck_id>/cards/<int:card_id>/update", methods=["POST", "GET"])
+def edit_card(deck_id: int, card_id: int):
+
+    logger.info(f"Handling '/decks/{deck_id}/cards/{card_id}/update route")
+
+    card = CardsRepository.get_by_id(card_id)
+
+    form = CardForm(request.form)
+
+   
+    if request.method == "POST":
+        
+        word = form.word.data
+        translation = form.translation.data
+
+        logger.info(f"""Handling '/decks/{deck_id}/cards/{card_id}/update route, form has been submitted. 
+Form details word : {word}, translation : {translation}""")
+        
+        if CardsRepository.update(card_id, word, translation):
+            logger.info(f"Handling '/decks/{deck_id}/cards/{card_id}/update route, card has been updated")
+        else:
+            logger.info(f"Handling '/decks/{deck_id}/cards/{card_id}/update route, card has not been updated")     
+        return redirect(url_for("card_detail", card_id = card_id, deck_id = deck_id))
+
+    form.word.data = card.word
+    form.word.translation = card.translation
+
+    logger.debug("Handling '/decks/{deck_id}/cards/{card_id}/update route, rendering card_edit.html")
+
+    return render_template("card_edit.html", form=form)
