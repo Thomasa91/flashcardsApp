@@ -88,7 +88,7 @@ def delete(deck_id) -> bool:
     c = conn.cursor()
 
     c.execute(query)
-
+    conn.commit()
     if c.rowcount:
         logger.debug(f"Deck with id {deck_id} has been removed")
         return True

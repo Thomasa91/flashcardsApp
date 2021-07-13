@@ -35,19 +35,19 @@ CREATE TRIGGER tg_deck_updated_at
     AFTER UPDATE ON deck
 BEGIN
     UPDATE deck SET updated_at = CURRENT_TIMESTAMP
-    WHERE id = old.id;
+    WHERE deck_id = OLD.deck_id;
 END;
 
 CREATE TRIGGER tg_card_updated_at
     AFTER UPDATE ON card
 BEGIN
     UPDATE card SET updated_at = CURRENT_TIMESTAMP
-    WHERE id = old.id;
+    WHERE card_id = OLD.card_id;
 END;
 
 CREATE TRIGGER  tg_user_updated_at
     AFTER UPDATE ON user
 BEGIN
     UPDATE user SET updated_at = CURRENT_TIMESTAMP
-    WHERE id = old.id;
+    WHERE user_id = OLD.user_id;
 END;

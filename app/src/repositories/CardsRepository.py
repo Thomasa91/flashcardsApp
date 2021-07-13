@@ -85,17 +85,37 @@ def get_by_id(card_id: int) -> Optional[Card]:
     return None
 
 
-def delete(card_id : int) -> bool:
+def delete(card_id: int) -> bool:
     
     query = f"DELETE FROM card WHERE card_id = {card_id};"
 
     c = conn.cursor()
 
     c.execute(query)
-
+    
+    conn.commit()
+    
     if c.rowcount:
         logger.debug(f"Card with id {card_id} has been removed")        
         return True
 
     logger.debug(f"Deleting a card with id {card_id} has not finished successfully")
+    return False
+
+
+def update(id: int, word: str, translation: str):
+
+    query = f"UPDATE card SET word = '{word}', translation = '{translation}' WHERE card_id = {id};"
+
+    c = conn.cursor()
+    c.execute(query)
+
+    conn.commit()
+
+    if c.rowcount:
+        logger.debug(f"Card with id {id} has been updated")
+        return True
+
+    logger.debug(f"Updating a card with id {id} has not finished successfully")
+
     return False
