@@ -166,8 +166,8 @@ def delete_card(deck_id: int, card_id: int):
     
     if CardsRepository.delete(card_id):
         logger.info(f"Handling /decks/{deck_id}/cards/{card_id}/delete route, card with id {card_id} has been deleted")
-        return redirect(url_for("display_cards", deck_id = deck_id))
-    logger.info(f"Handling /decks/{deck_id}/cards/{card_id}/delete, deck with id {card_id} has not been deleted")
+    else:
+        logger.info(f"Handling /decks/{deck_id}/cards/{card_id}/delete, deck with id {card_id} has not been deleted")
 
     return redirect(url_for("display_cards", deck_id = deck_id))
 
