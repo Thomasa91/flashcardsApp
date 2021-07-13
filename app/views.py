@@ -188,13 +188,12 @@ def edit_card(deck_id: int, card_id: int):
         translation = form.translation.data
 
         logger.info(f"""Handling '/decks/{deck_id}/cards/{card_id}/update route, form has been submitted. 
-        Form details word : {word}, translation : {translation}""")
+Form details word : {word}, translation : {translation}""")
         
         if CardsRepository.update(card_id, word, translation):
-            logger.info("Handling '/decks/{deck_id}/cards/{card_id}/update route, card has been updated")
-
-        logger.info("Handling '/decks/{deck_id}/cards/{card_id}/update route, card has not been updated")
-        
+            logger.info(f"Handling '/decks/{deck_id}/cards/{card_id}/update route, card has been updated")
+        else:
+            logger.info(f"Handling '/decks/{deck_id}/cards/{card_id}/update route, card has not been updated")     
         return redirect(url_for("card_detail", card_id = card_id, deck_id = deck_id))
 
     form.word.data = card.word
